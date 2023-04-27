@@ -1,0 +1,11 @@
+.h5p-joubelui-button.h5p-reader-question-button-submit
+{
+  &:last-child{
+    margin: 0;
+  }
+  &:after {
+    font-family: "H5PFontAwesome4";
+    margin-left: 0.5em;
+    content: "\f138";
+  }
+}

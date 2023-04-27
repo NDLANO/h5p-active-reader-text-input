@@ -1,0 +1,21 @@
+.h5p-reader-question-required-text {
+  font-size: 0.75em;
+}
+
+.h5p-reader-question-required-wrapper {
+  position: relative;
+  padding: 0 2em 0 0;
+  line-height: 1.5em;
+  .h5p-reader-question-answered {
+    color: #239059;
+    display: inline-block;
+  }
+  .h5p-reader-question-required-message {
+    display: inline-block;
+    color: #dd2e2e;
+    font-size: 0.9em;
+  }
+  .hidden {
+    display: none;
+  }
+}

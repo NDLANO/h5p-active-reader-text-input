@@ -1,0 +1,36 @@
+{
+  "title": "Active Reader Text Input",
+  "description": "Active reader text input",
+  "majorVersion": 1,
+  "minorVersion": 0,
+  "patchVersion": 0,
+  "runnable": 1,
+  "author": "Ravi Majithia",
+  "license": "MIT",
+  "machineName": "H5P.ActiveReaderTextInput",
+  "embedTypes": [
+    "iframe"
+  ],
+  "preloadedJs": [
+    {
+      "path": "dist/h5p-active-reader-text-input.js"
+    }
+  ],
+  "preloadedCss": [
+    {
+      "path": "dist/h5p-active-reader-text-input.css"
+    }
+  ],
+  "preloadedDependencies": [
+    {
+      "machineName": "H5P.CKEditor",
+      "majorVersion": 1,
+      "minorVersion": 0
+    },
+    {
+      "machineName": "FontAwesome",
+      "majorVersion": 4,
+      "minorVersion": 5
+    }
+  ]
+}
