@@ -15,8 +15,6 @@ export default class Main {
    * @param {object} [callbacks.onProgressed] Callback when user progressed.
    */
   constructor(params = {}, callbacks = {}) {
-    const self = this;
-
     this.params = Util.extend({
     }, params);
 
@@ -50,7 +48,7 @@ export default class Main {
     this.textarea = document.createElement('div');
     this.textarea.classList.add('h5p-reader-question-input');
     this.textarea.setAttribute('tabindex', 0);
-    this.textarea.addEventListener('focus', function (event) {
+    this.textarea.addEventListener('focus', (event) => {
       event.target.click();
     });
     this.textarea.id = this.params.textAreaID;
@@ -59,9 +57,9 @@ export default class Main {
     // Don't load CKEditor if in editor
     // (will break the ckeditor provided by the H5P editor)
     if (!this.params.isEditing) {
-      this.textarea.addEventListener('click', function () {
-        self.callbacks.onProgressed('interacted');
-        self.params.ckEditor.create();
+      this.textarea.addEventListener('click', () => {
+        this.callbacks.onProgressed('interacted');
+        this.params.ckEditor.create();
       });
       content = this.params.ckEditor.getData();
     }
