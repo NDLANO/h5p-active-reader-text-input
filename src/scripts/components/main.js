@@ -49,29 +49,29 @@ export default class Main {
     const inputWrapper = document.createElement('div');
     inputWrapper.classList.add('h5p-reader-question-input-wrapper');
 
-    const textarea = document.createElement('div');
-    textarea.classList.add('h5p-reader-question-input');
-    textarea.setAttribute('tabindex', 0);
-    textarea.addEventListener('focus', function (event) {
+    this.textarea = document.createElement('div');
+    this.textarea.classList.add('h5p-reader-question-input');
+    this.textarea.setAttribute('tabindex', 0);
+    this.textarea.addEventListener('focus', function (event) {
       event.target.click();
     });
-    textarea.id = this.params.textAreaID;
+    this.textarea.id = this.params.textAreaID;
 
     let content;
     // Don't load CKEditor if in editor
     // (will break the ckeditor provided by the H5P editor)
     if (!this.params.isEditing) {
-      textarea.addEventListener('click', function () {
+      this.textarea.addEventListener('click', function () {
         self.callbacks.onProgressed('interacted');
         self.params.ckEditor.create();
       });
       content = this.params.ckEditor.getData();
     }
 
-    textarea.innerHTML = content ? content : '';
-    textarea.setAttribute('placeholder', this.globalParams.placeholder);
+    this.textarea.innerHTML = content ? content : '';
+    this.textarea.setAttribute('placeholder', this.globalParams.placeholder);
 
-    inputWrapper.append(textarea);
+    inputWrapper.append(this.textarea);
     this.dom.appendChild(inputWrapper);
 
     if (this.globalParams.isRequired === true) {
@@ -141,8 +141,8 @@ export default class Main {
    */
   resetTask() {
     this.params.ckEditor.destroy();
-    this.dom.querySelector('.h5p-reader-question-input').innerHTML = '';
-    this.dom.querySelector('.h5p-reader-question-required-wrapper').classList.add('h5p-reader-question-hidden');
+    this.textarea.innerHTML = '';
+    this.validation?.reset();
   }
 
   /**
