@@ -32,8 +32,6 @@ export default class Main {
 
     const text = document.createElement('div');
     text.classList.add('h5p-reader-question-text');
-    text.setAttribute('tabindex', 0);
-    text.setAttribute('aria-label', this.globalParams.question);
     text.innerHTML = this.globalParams.question;
 
     if (this.globalParams.isRequired === true) {
