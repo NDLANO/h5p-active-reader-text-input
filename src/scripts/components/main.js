@@ -97,12 +97,12 @@ export default class Main {
       {
         onClick: () => {
           if (this.globalParams.isRequired && this.getResponse().length === 0) {
-            this.validation.showError();
+            this.validation?.showError();
           }
           else {
             this.currentState = 'answered';
             this.callbacks.onProgressed('answered');
-            this.validation.showSuccess();
+            this.validation?.showSuccess();
             this.button.hide();
           }
         }
