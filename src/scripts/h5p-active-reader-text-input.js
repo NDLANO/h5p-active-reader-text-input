@@ -16,9 +16,12 @@ export default class ActiveReaderTextInput extends H5P.EventDispatcher {
    */
   constructor(params, contentId, extras = {}) {
     super();
+
     const textAreaID = 'h5p-text-area-' + counter;
     const isEditing = (window.H5PEditor !== undefined);
+
     counter++;
+
     // Sanitize parameters
     this.params = Util.extend({
       question: 'Question or description',
@@ -58,7 +61,13 @@ export default class ActiveReaderTextInput extends H5P.EventDispatcher {
     });
 
     this.dom = this.buildDOM();
-    const ckeditor = new CKEditor(textAreaID, params.i10n.language, this.extras.parent.$container, this.extras.previousState.content);
+
+    const ckeditor = new CKEditor(
+      textAreaID,
+      params.i10n.language,
+      this.extras.parent.$container,
+      this.extras.previousState.content
+    );
 
     // Initialize main component
     this.main = new Main(
@@ -157,7 +166,9 @@ export default class ActiveReaderTextInput extends H5P.EventDispatcher {
 
     if (verb === 'answered') {
       this.params.score = this.params.maxScore;
-      xAPIEvent.setScoredResult(this.params.maxScore, this.params.maxScore, this);
+      xAPIEvent.setScoredResult(
+        this.params.maxScore, this.params.maxScore, this
+      );
       xAPIEvent.data.statement.result.score.raw = this.params.maxScore;
 
       // Add the response to the xAPI statement

@@ -12,7 +12,9 @@ export default class Validation {
 
     // Validation wrapper
     this.dom = document.createElement('div');
-    this.dom.classList.add('h5p-reader-question-required-wrapper', 'h5p-reader-question-hidden');
+    this.dom.classList.add(
+      'h5p-reader-question-required-wrapper', 'h5p-reader-question-hidden'
+    );
 
     // Rquired message
     const requiredMessage = document.createElement('div');
