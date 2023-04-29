@@ -3,6 +3,7 @@ import Globals from '@services/globals';
 import Dictionary from '@services/dictionary';
 import Main from '@components/main';
 import '@styles/h5p-active-reader-text-input.scss';
+import { decode } from 'he';
 
 const CKEditor = H5P.CKEditor;
 let counter = 0;
@@ -41,6 +42,9 @@ export default class ActiveReaderTextInput extends H5P.EventDispatcher {
       },
       a11y: {}
     }, params);
+
+    // Will be used as plain text, so HTML encoding needs to be removed.
+    this.params.placeholder = decode(this.params.placeholder);
 
     this.extras = Util.extend({
       previousState: {
