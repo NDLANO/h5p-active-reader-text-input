@@ -112,7 +112,6 @@ export default class Main {
 
   /**
    * Get DOM.
-   *
    * @returns {HTMLElement} Content DOM.
    */
   getDOM() {
@@ -121,7 +120,6 @@ export default class Main {
 
   /**
    * Return H5P core's call to store current state.
-   *
    * @returns {object} Current state.
    */
   getCurrentState() {
@@ -143,7 +141,6 @@ export default class Main {
 
   /**
    * Get response.
-   *
    * @returns {string} Response.
    */
   getResponse() {

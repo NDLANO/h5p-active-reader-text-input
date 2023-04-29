@@ -91,7 +91,6 @@ export default class ActiveReaderTextInput extends H5P.EventDispatcher {
 
   /**
    * Attach library to wrapper.
-   *
    * @param {H5P.jQuery} $wrapper Content's container.
    */
   attach($wrapper) {
@@ -101,7 +100,6 @@ export default class ActiveReaderTextInput extends H5P.EventDispatcher {
 
   /**
    * Build main DOM.
-   *
    * @returns {HTMLElement} Main DOM.
    */
   buildDOM() {
@@ -113,7 +111,6 @@ export default class ActiveReaderTextInput extends H5P.EventDispatcher {
 
   /**
    * Get task title.
-   *
    * @returns {string} Title.
    */
   getTitle() {
@@ -125,7 +122,6 @@ export default class ActiveReaderTextInput extends H5P.EventDispatcher {
 
   /**
    * Get description.
-   *
    * @returns {string} Description.
    */
   getDescription() {
@@ -134,7 +130,6 @@ export default class ActiveReaderTextInput extends H5P.EventDispatcher {
 
   /**
    * Handle progressed.
-   *
    * @param {string} verb Verb id.
    */
   handleProgressed(verb) {
@@ -143,7 +138,6 @@ export default class ActiveReaderTextInput extends H5P.EventDispatcher {
 
   /**
    * Trigger xAPI event.
-   *
    * @param {string} verb Short id of the verb we want to trigger.
    */
   triggerXAPIEvent(verb) {
@@ -153,7 +147,6 @@ export default class ActiveReaderTextInput extends H5P.EventDispatcher {
 
   /**
    * Create an xAPI event.
-   *
    * @param {string} verb Short id of the verb we want to trigger.
    * @returns {H5P.XAPIEvent} Event template.
    */
@@ -181,7 +174,6 @@ export default class ActiveReaderTextInput extends H5P.EventDispatcher {
 
   /**
    * Create a definition template
-   *
    * @param {string} question Question text
    * @returns {object} XAPI definition template
    */
@@ -202,7 +194,6 @@ export default class ActiveReaderTextInput extends H5P.EventDispatcher {
 
   /**
    * Return H5P core's call to store current state.
-   *
    * @returns {object} Current state.
    */
   getCurrentState() {
@@ -211,7 +202,6 @@ export default class ActiveReaderTextInput extends H5P.EventDispatcher {
 
   /**
    * Get response.
-   *
    * @returns {string} Response.
    */
   getResponse() {
@@ -220,7 +210,6 @@ export default class ActiveReaderTextInput extends H5P.EventDispatcher {
 
   /**
    * Get xAPI data.
-   *
    * @returns {object} XAPI statement.
    * @see contract at {@link https://h5p.org/documentation/developers/contracts#guides-header-6}
    */
@@ -241,7 +230,6 @@ export default class ActiveReaderTextInput extends H5P.EventDispatcher {
 
   /**
    * Get current score.
-   *
    * @returns {number} Current score.
    * @see contract at {@link https://h5p.org/documentation/developers/contracts#guides-header-2}
    */
@@ -251,7 +239,6 @@ export default class ActiveReaderTextInput extends H5P.EventDispatcher {
 
   /**
    * Get maximum possible score.
-   *
    * @returns {number} Score necessary for mastering.
    * @see contract at {@link https://h5p.org/documentation/developers/contracts#guides-header-3}
    */
