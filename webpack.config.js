@@ -1,6 +1,7 @@
 const path = require('path');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-const TerserPlugin = require('terser-webpack-plugin');
+// terser-webpack-plugin is provided by webpack automatically
+const TerserPlugin = require('terser-webpack-plugin'); // eslint-disable-line
 
 const mode = process.argv.includes('--mode=production') ?
   'production' : 'development';
