@@ -4,6 +4,7 @@ export default class Button {
   /**
    * @class
    * @param {object} params Parameter from editor.
+   * @param {object} params.i10n Localization strings.
    * @param {object} [callbacks] Callbacks.
    */
   constructor(params, callbacks) {
@@ -28,7 +29,6 @@ export default class Button {
 
   /**
    * Return the DOM for this class.
-   *
    * @returns {HTMLElement} DOM for this class.
    */
   getDOM() {

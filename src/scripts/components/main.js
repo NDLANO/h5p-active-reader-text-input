@@ -15,8 +15,6 @@ export default class Main {
    * @param {object} [callbacks.onProgressed] Callback when user progressed.
    */
   constructor(params = {}, callbacks = {}) {
-    const self = this;
-
     this.params = Util.extend({
     }, params);
 
@@ -32,8 +30,6 @@ export default class Main {
 
     const text = document.createElement('div');
     text.classList.add('h5p-reader-question-text');
-    text.setAttribute('tabindex', 0);
-    text.setAttribute('aria-label', this.globalParams.question);
     text.innerHTML = this.globalParams.question;
 
     if (this.globalParams.isRequired === true) {
@@ -49,29 +45,29 @@ export default class Main {
     const inputWrapper = document.createElement('div');
     inputWrapper.classList.add('h5p-reader-question-input-wrapper');
 
-    const textarea = document.createElement('div');
-    textarea.classList.add('h5p-reader-question-input');
-    textarea.setAttribute('tabindex', 0);
-    textarea.addEventListener('focus', function (event) {
+    this.textarea = document.createElement('div');
+    this.textarea.classList.add('h5p-reader-question-input');
+    this.textarea.setAttribute('tabindex', 0);
+    this.textarea.addEventListener('focus', (event) => {
       event.target.click();
     });
-    textarea.id = this.params.textAreaID;
+    this.textarea.id = this.params.textAreaID;
 
     let content;
     // Don't load CKEditor if in editor
     // (will break the ckeditor provided by the H5P editor)
     if (!this.params.isEditing) {
-      textarea.addEventListener('click', function () {
-        self.callbacks.onProgressed('interacted');
-        self.params.ckEditor.create();
+      this.textarea.addEventListener('click', () => {
+        this.callbacks.onProgressed('interacted');
+        this.params.ckEditor.create();
       });
       content = this.params.ckEditor.getData();
     }
 
-    textarea.innerHTML = content ? content : '';
-    textarea.setAttribute('placeholder', this.globalParams.placeholder);
+    this.textarea.innerHTML = content ? content : '';
+    this.textarea.setAttribute('placeholder', this.globalParams.placeholder);
 
-    inputWrapper.append(textarea);
+    inputWrapper.append(this.textarea);
     this.dom.appendChild(inputWrapper);
 
     if (this.globalParams.isRequired === true) {
@@ -97,12 +93,12 @@ export default class Main {
       {
         onClick: () => {
           if (this.globalParams.isRequired && this.getResponse().length === 0) {
-            this.validation.showError();
+            this.validation?.showError();
           }
           else {
             this.currentState = 'answered';
             this.callbacks.onProgressed('answered');
-            this.validation.showSuccess();
+            this.validation?.showSuccess();
             this.button.hide();
           }
         }
@@ -116,7 +112,6 @@ export default class Main {
 
   /**
    * Get DOM.
-   *
    * @returns {HTMLElement} Content DOM.
    */
   getDOM() {
@@ -125,7 +120,6 @@ export default class Main {
 
   /**
    * Return H5P core's call to store current state.
-   *
    * @returns {object} Current state.
    */
   getCurrentState() {
@@ -141,13 +135,12 @@ export default class Main {
    */
   resetTask() {
     this.params.ckEditor.destroy();
-    this.dom.querySelector('.h5p-reader-question-input').innerHTML = '';
-    this.dom.querySelector('.h5p-reader-question-required-wrapper').classList.add('h5p-reader-question-hidden');
+    this.textarea.innerHTML = '';
+    this.validation?.reset();
   }
 
   /**
    * Get response.
-   *
    * @returns {string} Response.
    */
   getResponse() {
