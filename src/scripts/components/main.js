@@ -1,5 +1,6 @@
 import Util from '@services/util';
 import Button from '@components/elements/button';
+import StatusBar from '@components/elements/status-bar';
 import Validation from '@components/elements/validation';
 import Globals from '@services/globals';
 import './main.scss';
@@ -61,6 +62,16 @@ export default class Main {
         this.callbacks.onProgressed('interacted');
         this.params.ckEditor.create();
       });
+      this.params.ckEditor.on('created', () => {
+        this.validation.setFieldContainer(this.getEditorContainer());
+        this.handleTextChanged();
+
+        // Catch editor change event
+        window.CKEDITOR.instances[this.params.textAreaID].on('change', (event) => {
+          this.handleTextChanged();
+        });
+      });
+
       content = this.params.ckEditor.getData();
     }
 
@@ -70,20 +81,58 @@ export default class Main {
     inputWrapper.append(this.textarea);
     this.dom.appendChild(inputWrapper);
 
-    if (this.globalParams.isRequired === true) {
-      // Initialize validation wrapper
-      this.validation = new Validation(
-        {
-          i10n: {
-            requiredMessage: this.globalParams.i10n.requiredMessage,
-            answeredMessage: this.globalParams.i10n.answeredMessage,
-          }
-        },
-      );
-      this.dom.append(this.validation.getDOM());
-    }
+    // Initialize character limit
+    this.initStatusBar();
+
+    // Initialize validation wrapper
+    this.initValidation();
 
     // Initialize button
+    this.initSubmitButton();
+
+    // Resize content type
+    Globals.get('resize')();
+  }
+
+  /**
+   * Initialize the status bar for remaining characters in the field
+   */
+  initStatusBar() {
+    this.statusBar = new StatusBar(
+      {
+        i10n: {
+          remainingChars: this.globalParams.i10n.remainingChars
+        },
+        charactersLimit: parseInt(this.globalParams.charactersLimit),
+        initialChars: this.textarea.innerText.length,
+      }
+    );
+    this.dom.append(this.statusBar.getDOM());
+  }
+
+  /**
+   * Initialize validation for editor field
+   */
+  initValidation() {
+    this.validation = new Validation(
+      {
+        i10n: {
+          requiredMessage: this.globalParams.i10n.requiredMessage,
+          answeredMessage: this.globalParams.i10n.answeredMessage,
+        },
+        isRequired: this.globalParams.isRequired,
+        fieldContainer: this.getEditorContainer(),
+        charactersLimit: parseInt(this.globalParams.charactersLimit),
+        initialChars: this.textarea.innerText.length,
+      },
+    );
+    this.dom.append(this.validation.getDOM());
+  }
+
+  /**
+   * Initialize submit button for the field
+   */
+  initSubmitButton() {
     this.button = new Button(
       {
         i10n: {
@@ -92,10 +141,8 @@ export default class Main {
       },
       {
         onClick: () => {
-          if (this.globalParams.isRequired && this.getResponse().length === 0) {
-            this.validation?.showError();
-          }
-          else {
+          const hasError = this.validation.validate(this.getPlaintextContent().length);
+          if (!hasError) {
             this.currentState = 'answered';
             this.callbacks.onProgressed('answered');
             this.validation?.showSuccess();
@@ -105,10 +152,7 @@ export default class Main {
       }
     );
     this.dom.append(this.button.getDOM());
-
-    Globals.get('resize')();
   }
-
 
   /**
    * Get DOM.
@@ -144,6 +188,37 @@ export default class Main {
    * @returns {string} Response.
    */
   getResponse() {
-    return this.params.ckEditor.getData();
+    return this.params.ckEditor
+      ? this.params.ckEditor.getData()
+      : this.textarea.innerText;
+  }
+
+  /**
+   * Get plaintext.
+   * @returns {string} Response.
+   */
+  getPlaintextContent() {
+    const tempEle = document.createElement('div');
+    tempEle.innerHTML = this.getResponse();
+    const content = tempEle.innerText || tempEle.textContent;
+    return content;
+  }
+
+  /**
+   * Get ckeditor container.
+   * @returns {HTMLElement} editor container.
+   */
+  getEditorContainer() {
+    return window.CKEDITOR?.instances[this.params.textAreaID]?.container.$ || this.textarea;
+  }
+
+  /**
+   * Handle text changed event
+   */
+  handleTextChanged() {
+    const content = this.getPlaintextContent();
+    const remainingChars = parseInt(this.globalParams.charactersLimit) - content.length;
+    this.statusBar.setUpdatedCharsCount(remainingChars);
+    this.validation.validateCharsLimit(content.length);
   }
 }

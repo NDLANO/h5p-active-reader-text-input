@@ -20,7 +20,6 @@ export default class Validation {
     // Required message
     this.requiredMessage = document.createElement('div');
     this.requiredMessage.classList.add('h5p-reader-question-required-message');
-    this.requiredMessage.innerHTML = this.params.i10n.requiredMessage;
     this.dom.appendChild(this.requiredMessage);
 
     // Success message
@@ -30,6 +29,11 @@ export default class Validation {
     );
     this.answeredMessage.innerHTML = this.params.i10n.answeredMessage;
     this.dom.appendChild(this.answeredMessage);
+
+    const remainingChars = this.params.charactersLimit - this.params.initialChars;
+    if (remainingChars < 0) {
+      this.params.fieldContainer.classList.add('validation-error');
+    }
   }
 
   /**
@@ -42,11 +46,14 @@ export default class Validation {
 
   /**
    * Show error message
+   * @param {string} errorMessage error message
    */
-  showError() {
+  showError(errorMessage) {
     this.dom.classList.remove('h5p-reader-question-hidden');
     this.requiredMessage.classList.remove('hidden');
+    this.requiredMessage.innerHTML = errorMessage;
     this.answeredMessage.classList.add('hidden');
+    this.params.fieldContainer.classList.add('validation-error');
   }
 
   /**
@@ -65,5 +72,50 @@ export default class Validation {
     this.dom.classList.add(
       'h5p-reader-question-required-wrapper', 'h5p-reader-question-hidden'
     );
+  }
+
+  /**
+   * Validate input/editor content
+   * @param {number} contentLength length of content
+   * @returns {boolean}.
+   */
+  validate(contentLength) {
+    const remainingChars = this.params.charactersLimit - contentLength;
+    this.params.fieldContainer.classList.remove('validation-error');
+    let isError = this.validateCharsLimit(contentLength) ? true : false;
+
+    if (this.params.isRequired && contentLength === 0) {
+      this.params.fieldContainer.classList.add('validation-error');
+      this.showError(this.params.i10n.requiredMessage);
+      isError = true;
+    }
+
+    return isError;
+  }
+
+  /**
+   * Validate input/editor content
+   * @param {number} contentLength length of content
+   * @returns {boolean}.
+   */
+  validateCharsLimit(contentLength) {
+    const remainingChars = this.params.charactersLimit - contentLength;
+    let isError = false;
+    this.params.fieldContainer.classList.remove('validation-error');
+
+    if (remainingChars < 0) {
+      this.params.fieldContainer.classList.add('validation-error');
+      isError = true;
+    }
+
+    return isError;
+  }
+
+  /**
+   * Updated field container parameter
+   * @param {HTMLElement} container updated editor container
+   */
+  setFieldContainer(container) {
+    this.params.fieldContainer = container;
   }
 }

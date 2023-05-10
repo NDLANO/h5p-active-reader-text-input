@@ -38,7 +38,8 @@ export default class ActiveReaderTextInput extends H5P.EventDispatcher {
         requiredText: 'required',
         requiredMessage: 'This question requires an answer',
         answeredMessage: 'This question has been asnwered',
-        submitButtonLabel: 'Submit'
+        submitButtonLabel: 'Submit',
+        remainingChars: 'Remaining characters: @chars'
       },
       a11y: {}
     }, params);

@@ -21,6 +21,14 @@
     "description": "Learners must provide an answer in order to proceed"
   },
   {
+    "label": "Characters Limit",
+    "name": "charactersLimit",
+    "type": "number",
+    "importance": "high",
+    "default": "200",
+    "description": "Number of characters allowed in the field"
+  },
+  {
     "label": "Localize Free Text Question buttons",
     "name": "i10n",
     "type": "group",
@@ -58,6 +66,14 @@
         "type": "text",
         "default": "Submit",
         "importance": "low"
+      },
+      {
+        "name": "remainingChars",
+        "type": "text",
+        "label": "Remaining characters",
+        "importance": "low",
+        "default": "Remaining characters: @chars",
+        "description": "Message for remaining characters. You can use @chars which will be replaced by the corresponding number."
       },
       {
         "name": "language",
