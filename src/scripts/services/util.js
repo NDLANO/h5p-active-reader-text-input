@@ -22,4 +22,19 @@ export default class Util {
     }
     return arguments[0];
   }
+
+  /**
+   * Strip HTML.
+   * @param {string} html HTML string.
+   * @returns {string} Plain text.
+   */
+  static stripHTML(html) {
+    if (typeof html !== 'string') {
+      return '';
+    }
+
+    const div = document.createElement('div');
+    div.innerHTML = html;
+    return div.textContent || div.innerText || '';
+  }
 }

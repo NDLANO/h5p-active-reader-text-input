@@ -29,6 +29,8 @@ export default class Main {
     this.dom = document.createElement('div');
     this.dom.classList.add('h5p-reader-question-text-wrapper');
 
+    this.charactersLimit = parseInt(this.globalParams.charactersLimit);
+
     const text = document.createElement('div');
     text.classList.add('h5p-reader-question-text');
     text.innerHTML = this.globalParams.question;
@@ -64,11 +66,11 @@ export default class Main {
       });
       this.params.ckEditor.on('created', () => {
         this.validation.setFieldContainer(this.getEditorContainer());
-        this.handleTextChanged();
+        this.charactersLimit > 0 && this.handleTextChanged();
 
         // Catch editor change event
-        window.CKEDITOR.instances[this.params.textAreaID].on('change', (event) => {
-          this.handleTextChanged();
+        window.CKEDITOR.instances[this.params.textAreaID].on('change', () => {
+          this.charactersLimit > 0 && this.handleTextChanged();
         });
       });
 
@@ -82,7 +84,7 @@ export default class Main {
     this.dom.appendChild(inputWrapper);
 
     // Initialize character limit
-    this.initStatusBar();
+    this.charactersLimit > 0 && this.initStatusBar();
 
     // Initialize validation wrapper
     this.initValidation();
@@ -95,7 +97,7 @@ export default class Main {
   }
 
   /**
-   * Initialize the status bar for remaining characters in the field
+   * Initialize the status bar for remaining characters in the field.
    */
   initStatusBar() {
     this.statusBar = new StatusBar(
@@ -103,7 +105,7 @@ export default class Main {
         i10n: {
           remainingChars: this.globalParams.i10n.remainingChars
         },
-        charactersLimit: parseInt(this.globalParams.charactersLimit),
+        charactersLimit: this.charactersLimit,
         initialChars: this.textarea.innerText.length,
       }
     );
@@ -111,7 +113,7 @@ export default class Main {
   }
 
   /**
-   * Initialize validation for editor field
+   * Initialize validation for editor field.
    */
   initValidation() {
     this.validation = new Validation(
@@ -122,15 +124,15 @@ export default class Main {
         },
         isRequired: this.globalParams.isRequired,
         fieldContainer: this.getEditorContainer(),
-        charactersLimit: parseInt(this.globalParams.charactersLimit),
+        charactersLimit: this.charactersLimit,
         initialChars: this.textarea.innerText.length,
-      },
+      }
     );
     this.dom.append(this.validation.getDOM());
   }
 
   /**
-   * Initialize submit button for the field
+   * Initialize submit button for the field.
    */
   initSubmitButton() {
     this.button = new Button(
@@ -141,13 +143,16 @@ export default class Main {
       },
       {
         onClick: () => {
-          const hasError = this.validation.validate(this.getPlaintextContent().length);
-          if (!hasError) {
+          const isValid = this.validation.isFieldValid(
+            this.getPlaintextContent().length
+          );
+          if (isValid) {
             this.currentState = 'answered';
             this.callbacks.onProgressed('answered');
             this.validation?.showSuccess();
             this.button.hide();
           }
+          Globals.get('resize')();
         }
       }
     );
@@ -181,6 +186,7 @@ export default class Main {
     this.params.ckEditor.destroy();
     this.textarea.innerHTML = '';
     this.validation?.reset();
+    this.button.show();
   }
 
   /**
@@ -200,8 +206,7 @@ export default class Main {
   getPlaintextContent() {
     const tempEle = document.createElement('div');
     tempEle.innerHTML = this.getResponse();
-    const content = tempEle.innerText || tempEle.textContent;
-    return content;
+    return Util.stripHTML(this.getResponse());
   }
 
   /**
@@ -209,16 +214,18 @@ export default class Main {
    * @returns {HTMLElement} editor container.
    */
   getEditorContainer() {
-    return window.CKEDITOR?.instances[this.params.textAreaID]?.container.$ || this.textarea;
+    return (
+      window.CKEDITOR?.instances[this.params.textAreaID]?.container.$ ||
+      this.textarea
+    );
   }
 
   /**
-   * Handle text changed event
+   * Handle text changed event.
    */
   handleTextChanged() {
     const content = this.getPlaintextContent();
-    const remainingChars = parseInt(this.globalParams.charactersLimit) - content.length;
-    this.statusBar.setUpdatedCharsCount(remainingChars);
-    this.validation.validateCharsLimit(content.length);
+    this.statusBar.setUpdatedCharsCount(this.charactersLimit - content.length);
+    this.validation.isCharLimitExceeded(content.length);
   }
 }

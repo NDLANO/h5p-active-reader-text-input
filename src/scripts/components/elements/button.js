@@ -39,6 +39,13 @@ export default class Button {
    * Hide button.
    */
   hide() {
-    this.dom.classList.add('h5p-reader-question-hidden');
+    this.dom.classList.add('hidden');
+  }
+
+  /**
+   * show button.
+   */
+  show() {
+    this.dom.classList.remove('hidden');
   }
 }

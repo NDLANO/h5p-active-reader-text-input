@@ -21,12 +21,12 @@
     "description": "Learners must provide an answer in order to proceed"
   },
   {
-    "label": "Characters Limit",
+    "label": "Characters limit",
     "name": "charactersLimit",
     "type": "number",
-    "importance": "high",
-    "default": "200",
-    "description": "Number of characters allowed in the field"
+    "importance": "low",
+    "default": 0,
+    "description": "Number of characters allowed in the field. Please leave this field with default value if you don't want to limit the number of characters."
   },
   {
     "label": "Localize Free Text Question buttons",
