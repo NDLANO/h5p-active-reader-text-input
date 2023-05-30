@@ -41,7 +41,7 @@ export default class Validation {
   }
 
   /**
-   * Show error message
+   * Show error message.
    * @param {string} errorMessage error message
    */
   showError(errorMessage) {
@@ -53,7 +53,7 @@ export default class Validation {
   }
 
   /**
-   * Show success message
+   * Show success message.
    */
   showSuccess() {
     this.dom.classList.remove('hidden');
@@ -109,7 +109,7 @@ export default class Validation {
   }
 
   /**
-   * Updated field container parameter
+   * Updated field container parameter.
    * @param {HTMLElement} container updated editor container
    */
   setFieldContainer(container) {
