@@ -2,6 +2,9 @@
   &:last-child {
     margin: 0;
   }
+  &.mt {
+    margin-top: 0.5em;
+  }
 
   &:after {
     content: "\f138";

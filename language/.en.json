@@ -44,6 +44,16 @@
           "description": "Message for remaining characters. You can use @chars which will be replaced by the corresponding number."
         },
         {
+          "label": "Characters over limit",
+          "default": "@chars character(s) over limit",
+          "description": "Message for over limit characters. You can use @chars which will be replaced by the corresponding number."
+        },
+        {
+          "label": "A11y label for exceed characters limit",
+          "default": "You have exceeded the character limit for this field. Please remove or shorten your input by @chars characters.",
+          "description": "Message to screen reader for remaining characters. You can use @chars which will be replaced by the corresponding number."
+        },
+        {
           "label": "Wysiwyg editor language",
           "description": "The language of the wysiwyg user interface",
           "options": [

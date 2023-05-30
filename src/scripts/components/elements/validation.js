@@ -18,6 +18,7 @@ export default class Validation {
     // Required message
     this.requiredMessage = document.createElement('div');
     this.requiredMessage.classList.add('h5p-reader-question-required-message');
+    this.requiredMessage.setAttribute('role', 'alert');
     this.dom.appendChild(this.requiredMessage);
 
     // Success message
@@ -67,6 +68,7 @@ export default class Validation {
     this.dom.classList.add(
       'h5p-reader-question-required-wrapper', 'hidden'
     );
+    this.params.fieldContainer.classList.remove('validation-error');
   }
 
   /**

@@ -46,7 +46,7 @@
   display: flex;
   flex: 1;
   font-size: 0.9em;
-  padding: 1em 0;
+  padding: 1em 0 0;
   position: relative;
   resize: none;
   word-wrap: break-word;
@@ -110,5 +110,11 @@
   color: $color-correct;
   &.error-exceeded-chars {
     color: $color-incorrect;
+  }
+  .hidden-aria{
+    position: absolute;
+    left: -99999px;
+    width: 1px;
+    height: 1px;
   }
 }

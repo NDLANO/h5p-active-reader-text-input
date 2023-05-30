@@ -26,6 +26,7 @@ export default class Main {
     this.currentState = 'inProgress';
 
     this.globalParams = Globals.get('params');
+    this.globalExtras = Globals.get('extras');
     this.dom = document.createElement('div');
     this.dom.classList.add('h5p-reader-question-text-wrapper');
 
@@ -103,10 +104,12 @@ export default class Main {
     this.statusBar = new StatusBar(
       {
         i10n: {
-          remainingChars: this.globalParams.i10n.remainingChars
+          remainingCharsInfoLabel: this.globalParams.i10n.remainingCharsInfoLabel,
+          exceededCharsInfoLabel: this.globalParams.i10n.exceededCharsInfoLabel,
+          ariaTextExceedCharcterLimit: this.globalParams.i10n.ariaTextExceedCharcterLimit
         },
         charactersLimit: this.charactersLimit,
-        initialChars: this.textarea.innerText.length,
+        initialChars: this.textarea.innerText.length
       }
     );
     this.dom.append(this.statusBar.getDOM());
@@ -139,7 +142,8 @@ export default class Main {
       {
         i10n: {
           submitButtonLabel: this.globalParams.i10n.submitButtonLabel
-        }
+        },
+        charactersLimit: this.charactersLimit
       },
       {
         onClick: () => {
@@ -183,9 +187,13 @@ export default class Main {
    * Resets the complete task back to its' initial state.
    */
   resetTask() {
+    window.CKEDITOR?.instances[this.params.textAreaID]?.updateElement();
+    window.CKEDITOR?.instances[this.params.textAreaID]?.setData('');
+    this.globalExtras.previousState.content = '';
     this.params.ckEditor.destroy();
     this.textarea.innerHTML = '';
     this.validation?.reset();
+    this.statusBar?.reset();
     this.button.show();
   }
 
