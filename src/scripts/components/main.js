@@ -1,5 +1,6 @@
 import Util from '@services/util';
 import Button from '@components/elements/button';
+import StatusBar from '@components/elements/status-bar';
 import Validation from '@components/elements/validation';
 import Globals from '@services/globals';
 import './main.scss';
@@ -25,8 +26,11 @@ export default class Main {
     this.currentState = 'inProgress';
 
     this.globalParams = Globals.get('params');
+    this.globalExtras = Globals.get('extras');
     this.dom = document.createElement('div');
     this.dom.classList.add('h5p-reader-question-text-wrapper');
+
+    this.charactersLimit = parseInt(this.globalParams.charactersLimit);
 
     const text = document.createElement('div');
     text.classList.add('h5p-reader-question-text');
@@ -61,6 +65,16 @@ export default class Main {
         this.callbacks.onProgressed('interacted');
         this.params.ckEditor.create();
       });
+      this.params.ckEditor.on('created', () => {
+        this.validation.setFieldContainer(this.getEditorContainer());
+        this.charactersLimit > 0 && this.handleTextChanged();
+
+        // Catch editor change event
+        window.CKEDITOR.instances[this.params.textAreaID].on('change', () => {
+          this.charactersLimit > 0 && this.handleTextChanged();
+        });
+      });
+
       content = this.params.ckEditor.getData();
     }
 
@@ -70,45 +84,84 @@ export default class Main {
     inputWrapper.append(this.textarea);
     this.dom.appendChild(inputWrapper);
 
-    if (this.globalParams.isRequired === true) {
-      // Initialize validation wrapper
-      this.validation = new Validation(
-        {
-          i10n: {
-            requiredMessage: this.globalParams.i10n.requiredMessage,
-            answeredMessage: this.globalParams.i10n.answeredMessage,
-          }
-        },
-      );
-      this.dom.append(this.validation.getDOM());
-    }
+    // Initialize character limit
+    this.charactersLimit > 0 && this.initStatusBar();
+
+    // Initialize validation wrapper
+    this.initValidation();
 
     // Initialize button
+    this.initSubmitButton();
+
+    // Resize content type
+    Globals.get('resize')();
+  }
+
+  /**
+   * Initialize the status bar for remaining characters in the field.
+   */
+  initStatusBar() {
+    this.statusBar = new StatusBar(
+      {
+        i10n: {
+          remainingCharsInfoLabel: this.globalParams.i10n.remainingCharsInfoLabel,
+          exceededCharsInfoLabel: this.globalParams.i10n.exceededCharsInfoLabel,
+          ariaTextExceedCharcterLimit: this.globalParams.i10n.ariaTextExceedCharcterLimit
+        },
+        charactersLimit: this.charactersLimit,
+        initialChars: this.textarea.innerText.length
+      }
+    );
+    this.dom.append(this.statusBar.getDOM());
+  }
+
+  /**
+   * Initialize validation for editor field.
+   */
+  initValidation() {
+    this.validation = new Validation(
+      {
+        i10n: {
+          requiredMessage: this.globalParams.i10n.requiredMessage,
+          answeredMessage: this.globalParams.i10n.answeredMessage,
+        },
+        isRequired: this.globalParams.isRequired,
+        fieldContainer: this.getEditorContainer(),
+        charactersLimit: this.charactersLimit,
+        initialChars: this.textarea.innerText.length,
+      }
+    );
+    this.dom.append(this.validation.getDOM());
+  }
+
+  /**
+   * Initialize submit button for the field.
+   */
+  initSubmitButton() {
     this.button = new Button(
       {
         i10n: {
           submitButtonLabel: this.globalParams.i10n.submitButtonLabel
-        }
+        },
+        charactersLimit: this.charactersLimit
       },
       {
         onClick: () => {
-          if (this.globalParams.isRequired && this.getResponse().length === 0) {
-            this.validation?.showError();
-          }
-          else {
+          const isValid = this.validation.isFieldValid(
+            this.getPlaintextContent().length
+          );
+          if (isValid) {
             this.currentState = 'answered';
             this.callbacks.onProgressed('answered');
             this.validation?.showSuccess();
             this.button.hide();
           }
+          Globals.get('resize')();
         }
       }
     );
     this.dom.append(this.button.getDOM());
-
-    Globals.get('resize')();
   }
-
 
   /**
    * Get DOM.
@@ -134,9 +187,14 @@ export default class Main {
    * Resets the complete task back to its' initial state.
    */
   resetTask() {
+    window.CKEDITOR?.instances[this.params.textAreaID]?.updateElement();
+    window.CKEDITOR?.instances[this.params.textAreaID]?.setData('');
+    this.globalExtras.previousState.content = '';
     this.params.ckEditor.destroy();
     this.textarea.innerHTML = '';
     this.validation?.reset();
+    this.statusBar?.reset();
+    this.button.show();
   }
 
   /**
@@ -144,6 +202,38 @@ export default class Main {
    * @returns {string} Response.
    */
   getResponse() {
-    return this.params.ckEditor.getData();
+    return this.params.ckEditor
+      ? this.params.ckEditor.getData()
+      : this.textarea.innerText;
+  }
+
+  /**
+   * Get plaintext.
+   * @returns {string} Response.
+   */
+  getPlaintextContent() {
+    const tempEle = document.createElement('div');
+    tempEle.innerHTML = this.getResponse();
+    return Util.stripHTML(this.getResponse());
+  }
+
+  /**
+   * Get ckeditor container.
+   * @returns {HTMLElement} editor container.
+   */
+  getEditorContainer() {
+    return (
+      window.CKEDITOR?.instances[this.params.textAreaID]?.container.$ ||
+      this.textarea
+    );
+  }
+
+  /**
+   * Handle text changed event.
+   */
+  handleTextChanged() {
+    const content = this.getPlaintextContent();
+    this.statusBar.setUpdatedCharsCount(this.charactersLimit - content.length);
+    this.validation.isCharLimitExceeded(content.length);
   }
 }

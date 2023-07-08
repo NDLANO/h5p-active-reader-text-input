@@ -21,6 +21,14 @@
     "description": "Learners must provide an answer in order to proceed"
   },
   {
+    "label": "Characters limit",
+    "name": "charactersLimit",
+    "type": "number",
+    "importance": "low",
+    "default": 0,
+    "description": "Number of characters allowed in the field. Please leave this field with default value if you don't want to limit the number of characters."
+  },
+  {
     "label": "Localize Free Text Question buttons",
     "name": "i10n",
     "type": "group",
@@ -58,6 +66,30 @@
         "type": "text",
         "default": "Submit",
         "importance": "low"
+      },
+      {
+        "name": "remainingCharsInfoLabel",
+        "type": "text",
+        "label": "Remaining characters",
+        "importance": "low",
+        "default": "Remaining characters: @chars",
+        "description": "Message for remaining characters. You can use @chars which will be replaced by the corresponding number."
+      },
+      {
+        "name": "exceededCharsInfoLabel",
+        "type": "text",
+        "label": "Characters over limit",
+        "importance": "low",
+        "default": "@chars character(s) over limit",
+        "description": "Message for over limit characters. You can use @chars which will be replaced by the corresponding number."
+      },
+      {
+        "name": "ariaTextExceedCharcterLimit",
+        "type": "text",
+        "label": "A11y label for exceed characters limit",
+        "importance": "low",
+        "default": "You have exceeded the character limit for this field. Please remove or shorten your input by @chars characters.",
+        "description": "Message to screen reader for remaining characters. You can use @chars which will be replaced by the corresponding number."
       },
       {
         "name": "language",

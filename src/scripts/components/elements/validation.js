@@ -4,23 +4,21 @@ export default class Validation {
   /**
    * @class
    * @param {object} params Parameter from editor.
-   * @param {object} params.i10n Localization strings.
-   * @param {object} [callbacks] Callbacks.
    */
-  constructor(params, callbacks) {
+  constructor(params) {
     // Set missing params
     this.params = params;
 
     // Validation wrapper
     this.dom = document.createElement('div');
     this.dom.classList.add(
-      'h5p-reader-question-required-wrapper', 'h5p-reader-question-hidden'
+      'h5p-reader-question-required-wrapper', 'hidden'
     );
 
     // Required message
     this.requiredMessage = document.createElement('div');
     this.requiredMessage.classList.add('h5p-reader-question-required-message');
-    this.requiredMessage.innerHTML = this.params.i10n.requiredMessage;
+    this.requiredMessage.setAttribute('role', 'alert');
     this.dom.appendChild(this.requiredMessage);
 
     // Success message
@@ -30,6 +28,8 @@ export default class Validation {
     );
     this.answeredMessage.innerHTML = this.params.i10n.answeredMessage;
     this.dom.appendChild(this.answeredMessage);
+
+    this.isCharLimitExceeded(this.params.charactersLimit);
   }
 
   /**
@@ -41,19 +41,22 @@ export default class Validation {
   }
 
   /**
-   * Show error message
+   * Show error message.
+   * @param {string} errorMessage error message
    */
-  showError() {
-    this.dom.classList.remove('h5p-reader-question-hidden');
+  showError(errorMessage) {
+    this.dom.classList.remove('hidden');
     this.requiredMessage.classList.remove('hidden');
+    this.requiredMessage.innerHTML = errorMessage;
     this.answeredMessage.classList.add('hidden');
+    this.params.fieldContainer.classList.add('validation-error');
   }
 
   /**
-   * Show success message
+   * Show success message.
    */
   showSuccess() {
-    this.dom.classList.remove('h5p-reader-question-hidden');
+    this.dom.classList.remove('hidden');
     this.answeredMessage.classList.remove('hidden');
     this.requiredMessage.classList.add('hidden');
   }
@@ -63,7 +66,53 @@ export default class Validation {
    */
   reset() {
     this.dom.classList.add(
-      'h5p-reader-question-required-wrapper', 'h5p-reader-question-hidden'
+      'h5p-reader-question-required-wrapper', 'hidden'
     );
+    this.params.fieldContainer.classList.remove('validation-error');
+  }
+
+  /**
+   * Validate input/editor content.
+   * @param {number} contentLength length of content
+   * @returns {boolean} True, if input validates. Else false.
+   */
+  isFieldValid(contentLength) {
+    this.params.fieldContainer.classList.remove('validation-error');
+    let isValid = this.params.charactersLimit > 0
+      ? !this.isCharLimitExceeded(contentLength)
+      : true;
+
+    if (this.params.isRequired && contentLength === 0) {
+      this.params.fieldContainer.classList.add('validation-error');
+      this.showError(this.params.i10n.requiredMessage);
+      isValid = false;
+    }
+
+    return isValid;
+  }
+
+  /**
+   * Validate input/editor content.
+   * @param {number} contentLength length of content
+   * @returns {boolean} True, if input validates. Else false.
+   */
+  isCharLimitExceeded(contentLength) {
+    const remainingChars = this.params.charactersLimit - contentLength;
+    this.params.fieldContainer.classList.remove('validation-error');
+
+    if (remainingChars < 0) {
+      this.params.fieldContainer.classList.add('validation-error');
+      return true;
+    }
+
+    return false;
+  }
+
+  /**
+   * Updated field container parameter.
+   * @param {HTMLElement} container updated editor container
+   */
+  setFieldContainer(container) {
+    this.params.fieldContainer = container;
   }
 }

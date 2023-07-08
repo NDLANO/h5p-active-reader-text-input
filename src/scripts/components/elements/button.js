@@ -1,4 +1,5 @@
 import './button.scss';
+import Globals from '@services/globals';
 
 export default class Button {
   /**
@@ -16,15 +17,18 @@ export default class Button {
     this.callbacks.onClick = this.callbacks.onClick || (() => {});
 
     // Button
-    this.joubelButton = H5P.JoubelUI.createButton({
+    const joubelButton = H5P.JoubelUI.createButton({
       html: this.params.i10n.submitButtonLabel,
       'class': 'h5p-reader-question-button-submit'
     });
-    this.dom = this.joubelButton[0];
+    this.dom = joubelButton[0];
 
     this.dom.addEventListener('click', (event) => {
       this.callbacks.onClick(event);
     });
+
+    parseInt(this.params.charactersLimit) === 0 &&
+    this.dom.classList.add('mt');
   }
 
   /**
@@ -39,6 +43,13 @@ export default class Button {
    * Hide button.
    */
   hide() {
-    this.dom.classList.add('h5p-reader-question-hidden');
+    this.dom.classList.add('hidden');
+  }
+
+  /**
+   * show button.
+   */
+  show() {
+    this.dom.classList.remove('hidden');
   }
 }
