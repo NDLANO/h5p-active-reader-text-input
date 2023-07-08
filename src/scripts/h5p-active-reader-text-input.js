@@ -55,8 +55,12 @@ export default class ActiveReaderTextInput extends H5P.EventDispatcher {
       }
     }, extras);
 
+    // TODO: Make class
+
     // Fill dictionary
     Dictionary.fill({ l10n: this.params.l10n, a11y: this.params.a11y });
+
+    // TODO: Make class
 
     // Set globals
     Globals.set('mainInstance', this);
@@ -140,6 +144,7 @@ export default class ActiveReaderTextInput extends H5P.EventDispatcher {
    * @param {string} verb Verb id.
    */
   handleProgressed(verb) {
+    // TODO: Check it verb is necessary
     this.triggerXAPIEvent(verb);
   }
 
@@ -165,6 +170,8 @@ export default class ActiveReaderTextInput extends H5P.EventDispatcher {
     );
 
     if (verb === 'answered') {
+      // TODO: Clean this up, cmp. Keyword Selector
+
       this.params.score = this.params.maxScore;
       xAPIEvent.setScoredResult(
         this.params.maxScore, this.params.maxScore, this
@@ -186,6 +193,8 @@ export default class ActiveReaderTextInput extends H5P.EventDispatcher {
    */
   getXAPIDefinition(question) {
     let definition = {};
+
+    // TODO: Add language tag
 
     definition.interactionType = 'fill-in';
     definition.type = 'http://adlnet.gov/expapi/activities/cmi.interaction';
@@ -214,6 +223,8 @@ export default class ActiveReaderTextInput extends H5P.EventDispatcher {
   getResponse() {
     return this.main.getResponse();
   }
+
+  // TODO: Use xAPI mixin
 
   /**
    * Get xAPI data.

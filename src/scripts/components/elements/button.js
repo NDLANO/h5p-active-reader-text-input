@@ -16,6 +16,8 @@ export default class Button {
     this.callbacks = callbacks || {};
     this.callbacks.onClick = this.callbacks.onClick || (() => {});
 
+    // TODO: Check whether this should really be labeled "Submit" here.
+
     // Button
     const joubelButton = H5P.JoubelUI.createButton({
       html: this.params.i10n.submitButtonLabel,
