@@ -11,8 +11,8 @@ import './main.scss';
 export default class Main {
   /**
    * @class
-   * @param {object} [params={}] Parameters.
-   * @param {object} [callbacks={}] Callbacks.
+   * @param {object} [params] Parameters.
+   * @param {object} [callbacks] Callbacks.
    * @param {object} [callbacks.onProgressed] Callback when user progressed.
    */
   constructor(params = {}, callbacks = {}) {
