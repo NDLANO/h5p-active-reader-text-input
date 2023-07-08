@@ -39,7 +39,8 @@ module.exports = {
   },
   output: {
     filename: `${libraryName}.js`,
-    path: path.resolve(__dirname, 'dist')
+    path: path.resolve(__dirname, 'dist'),
+    clean: true
   },
   target: ['browserslist'],
   module: {
