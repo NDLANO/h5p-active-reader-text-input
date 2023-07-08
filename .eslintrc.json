@@ -1,9 +1,4 @@
 {
-  "globals": {
-    "H5P": "readonly",
-    "H5PEditor": "readonly",
-    "H5PIntegration": "readonly"
-  },
   "env": {
     "browser": true,
     "node": true,
@@ -16,9 +11,6 @@
   "parserOptions": {
     "sourceType": "module",
     "ecmaVersion": 2020
-  },
-  "rules": {
-    "object-curly-spacing": ["error", "always"]
   },
   "plugins": ["jsdoc"],
   "settings": {
