@@ -1,6 +1,5 @@
 import Util from '@services/util';
 import Globals from '@services/globals';
-import Dictionary from '@services/dictionary';
 import Main from '@components/main';
 import '@styles/h5p-active-reader-text-input.scss';
 import { decode } from 'he';
@@ -54,11 +53,6 @@ export default class ActiveReaderTextInput extends H5P.EventDispatcher {
         content: ''
       }
     }, extras);
-
-    // TODO: Make class
-
-    // Fill dictionary
-    Dictionary.fill({ l10n: this.params.l10n, a11y: this.params.a11y });
 
     // TODO: Make class
 
