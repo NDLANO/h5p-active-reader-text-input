@@ -190,7 +190,7 @@ export default class Main {
    * Used for contracts.
    * Resets the complete task back to its' initial state.
    */
-  resetTask() {
+  reset() {
     window.CKEDITOR?.instances[this.params.textAreaID]?.updateElement();
     window.CKEDITOR?.instances[this.params.textAreaID]?.setData('');
     this.globalExtras.previousState.content = '';
