@@ -22,9 +22,6 @@ export default class Main {
       onXAPI: () => {}
     }, callbacks);
 
-    // TODO: constant
-    this.currentState = 'inProgress';
-
     this.globalParams = this.params.globals.get('params');
     this.globalExtras = this.params.globals.get('extras');
     this.dom = document.createElement('div');
@@ -152,7 +149,6 @@ export default class Main {
           );
 
           if (isValid) {
-            this.currentState = 'answered';
             this.callbacks.onXAPI('answered');
             this.validation?.showSuccess();
             this.button.hide();
@@ -181,8 +177,7 @@ export default class Main {
    */
   getCurrentState() {
     return {
-      content: this.params.ckEditor.getData(),
-      progress: this.currentState
+      content: this.params.ckEditor.getData()
     };
   }
 

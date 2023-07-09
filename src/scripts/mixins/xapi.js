@@ -26,13 +26,13 @@ export default class XAPI {
     );
 
     if (verb === 'answered') {
-      // TODO: Clean this up, cmp. Keyword Selector
-
-      this.params.score = this.params.maxScore;
       xAPIEvent.setScoredResult(
-        this.params.maxScore, this.params.maxScore, this
+        this.getScore(),
+        this.getMaxScore(),
+        this,
+        true,
+        this.getScore() === this.getMaxScore()
       );
-      xAPIEvent.data.statement.result.score.raw = this.params.maxScore;
 
       // Add the response to the xAPI statement
       // Return a stored user response if it exists

@@ -33,6 +33,7 @@ export default class QuestionTypeContract {
    * @see contract at {@link https://h5p.org/documentation/developers/contracts#guides-header-5}
    */
   resetTask() {
+    this.score = 0;
     this.main.reset();
   }
 

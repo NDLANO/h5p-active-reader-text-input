@@ -90,6 +90,10 @@ export default class ActiveReaderTextInput extends H5P.EventDispatcher {
       },
       {
         onXAPI: (verb) => {
+          if (verb === 'answered') {
+            this.score = this.params.maxScore;
+          }
+
           this.triggerXAPIEvent(verb);
         }
       }
