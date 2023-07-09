@@ -1,7 +1,6 @@
 import Util from '@services/util';
 import Button from '@components/elements/button';
 import StatusBar from '@components/elements/status-bar';
-import Validation from '@components/elements/validation';
 import './main.scss';
 
 /**
@@ -42,6 +41,8 @@ export default class Main {
 
     this.dom.appendChild(text);
 
+    // TODO: Put this in separate component
+
     // Initialize textarea/ckeditor
     const inputWrapper = document.createElement('div');
     inputWrapper.classList.add('h5p-reader-question-input-wrapper');
@@ -63,12 +64,15 @@ export default class Main {
         this.params.ckEditor.create();
       });
       this.params.ckEditor.on('created', () => {
-        this.validation.setFieldContainer(this.getEditorContainer());
-        this.charactersLimit > 0 && this.handleTextChanged();
+        if (this.charactersLimit > 0) {
+          this.handleTextChanged();
+        }
 
         // Catch editor change event
         window.CKEDITOR.instances[this.params.textAreaID].on('change', () => {
-          this.charactersLimit > 0 && this.handleTextChanged();
+          if (this.charactersLimit > 0) {
+            this.handleTextChanged();
+          }
         });
       });
 
@@ -82,13 +86,17 @@ export default class Main {
     this.dom.appendChild(inputWrapper);
 
     // Initialize character limit
-    this.charactersLimit > 0 && this.initStatusBar();
+    if (this.charactersLimit > 0) {
+      this.initStatusBarChars();
+    }
 
     // Initialize validation wrapper
-    this.initValidation();
+    this.initDoneMessage();
 
     // Initialize button
     this.initSubmitButton();
+
+    this.handleTextChanged();
 
     // Resize content type
     this.params.globals.get('resize')();
@@ -97,38 +105,19 @@ export default class Main {
   /**
    * Initialize the status bar for remaining characters in the field.
    */
-  initStatusBar() {
-    this.statusBar = new StatusBar(
-      {
-        i10n: {
-          remainingCharsInfoLabel: this.globalParams.i10n.remainingCharsInfoLabel,
-          exceededCharsInfoLabel: this.globalParams.i10n.exceededCharsInfoLabel,
-          ariaTextExceedCharcterLimit: this.globalParams.i10n.ariaTextExceedCharcterLimit
-        },
-        charactersLimit: this.charactersLimit,
-        initialChars: this.textarea.innerText.length
-      }
+  initStatusBarChars() {
+    this.statusBarChars = new StatusBar(
+      { classes: [StatusBar.ALIGNMENT_RIGHT] }
     );
-    this.dom.append(this.statusBar.getDOM());
+    this.dom.append(this.statusBarChars.getDOM());
   }
 
   /**
    * Initialize validation for editor field.
    */
-  initValidation() {
-    this.validation = new Validation(
-      {
-        i10n: {
-          requiredMessage: this.globalParams.i10n.requiredMessage,
-          answeredMessage: this.globalParams.i10n.answeredMessage,
-        },
-        isRequired: this.globalParams.isRequired,
-        fieldContainer: this.getEditorContainer(),
-        charactersLimit: this.charactersLimit,
-        initialChars: this.textarea.innerText.length,
-      }
-    );
-    this.dom.append(this.validation.getDOM());
+  initDoneMessage() {
+    this.statusBarDone = new StatusBar();
+    this.dom.append(this.statusBarDone.getDOM());
   }
 
   /**
@@ -144,19 +133,7 @@ export default class Main {
       },
       {
         onClick: () => {
-          const isValid = this.validation.isFieldValid(
-            this.getPlaintextContent().length
-          );
-
-          if (isValid) {
-            this.callbacks.onXAPI('answered');
-            this.validation?.showSuccess();
-            this.button.hide();
-          }
-
-          window.requestAnimationFrame(() => {
-            this.params.globals.get('resize')();
-          });
+          this.handleDone();
         }
       }
     );
@@ -191,9 +168,44 @@ export default class Main {
     this.globalExtras.previousState.content = '';
     this.params.ckEditor.destroy();
     this.textarea.innerHTML = '';
-    this.validation?.reset();
-    this.statusBar?.reset();
+    this.statusBarChars?.reset();
+    this.statusBarDone?.reset();
     this.button.show();
+  }
+
+  /**
+   * Handle clicked on done button.
+   */
+  handleDone() {
+    const contentLength = this.getPlaintextContent().length;
+
+    if (this.isFieldValid()) {
+      this.callbacks.onXAPI('answered');
+
+      this.statusBarDone.setMessage(
+        this.globalParams.i10n.answeredMessage,
+        { styles: ['correct'] }
+      );
+      this.button.hide();
+    }
+    else if (this.globalParams.isRequired && contentLength === 0) {
+      this.statusBarDone.setMessage(
+        this.globalParams.i10n.requiredMessage,
+        { styles: ['incorrect'] }
+      );
+    }
+    else {
+      this.statusBarDone.setMessage(
+        this.globalParams.i10n.requiredMessage,
+        { styles: ['incorrect'] }
+      );
+    }
+
+    this.statusBarDone.show();
+
+    window.requestAnimationFrame(() => {
+      this.params.globals.get('resize')();
+    });
   }
 
   /**
@@ -231,8 +243,58 @@ export default class Main {
    * Handle text changed event.
    */
   handleTextChanged() {
-    const content = this.getPlaintextContent();
-    this.statusBar.setUpdatedCharsCount(this.charactersLimit - content.length);
-    this.validation.isCharLimitExceeded(content.length);
+    if (this.isFieldValid()) {
+      this.button.enable();
+    }
+    else {
+      this.button.disable();
+    }
+
+    let charsInfoLabel;
+    const isCharLimitExceeded = this.isCharLimitExceeded();
+
+    if (isCharLimitExceeded) {
+      charsInfoLabel = this.globalParams.i10n.exceededCharsInfoLabel;
+    }
+    else {
+      charsInfoLabel = this.globalParams.i10n.remainingCharsInfoLabel;
+    }
+
+    const remainingChars = this.charactersLimit -
+      this.getPlaintextContent().length;
+    this.statusBarChars.setMessage(
+      charsInfoLabel.replace(/@chars/g, Math.abs(remainingChars)),
+      {
+        ...( isCharLimitExceeded && { styles: ['incorrect'] }),
+        ...( !isCharLimitExceeded && { styles: ['correct'] })
+      }
+    );
+
+    this.statusBarDone.hide();
+  }
+
+  /**
+   * Determine whether character limit is exceeded.
+   * @returns {boolean} True, if exceeded. Else false.
+   */
+  isCharLimitExceeded() {
+    const contentLength = this.getPlaintextContent().length;
+    return this.charactersLimit - contentLength < 0;
+  }
+
+  /**
+   * Determine whether text input is valid.
+   * @returns {boolean} True, if valid. Else false.
+   */
+  isFieldValid() {
+    const contentLength = this.getPlaintextContent().length;
+
+    if (this.globalParams.isRequired && contentLength === 0) {
+      return false;
+    }
+
+    return this.charactersLimit > 0
+      ? !this.isCharLimitExceeded(contentLength)
+      : true;
   }
 }

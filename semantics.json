@@ -1,69 +1,77 @@
 [
   {
-    "label": "Question",
     "name": "question",
     "type": "text",
+    "label": "Question",
     "importance": "high"
   },
   {
-    "label": "Placeholder text",
     "name": "placeholder",
     "type": "text",
-    "importance": "high",
+    "label": "Placeholder text",
+    "description": "Text that initially will be shown in the input field. Will be removed automatically when the user starts writing.",
     "default": "Enter your response here",
-    "description": "Text that initially will be shown in the input field. Will be removed automatically when the user starts writing."
+    "importance": "high"
   },
   {
-    "label": "Required",
     "name": "isRequired",
     "type": "boolean",
-    "importance": "high",
-    "description": "Learners must provide an answer in order to proceed"
+    "label": "Required",
+    "description": "Learners must provide an answer in order to proceed.",
+    "importance": "high"
   },
   {
-    "label": "Characters limit",
     "name": "charactersLimit",
     "type": "number",
-    "importance": "low",
+    "label": "Characters limit",
+    "description": "Number of characters allowed in the field. Please leave this field with default value if you don't want to limit the number of characters.",
     "default": 0,
-    "description": "Number of characters allowed in the field. Please leave this field with default value if you don't want to limit the number of characters."
+    "importance": "low"
   },
   {
-    "label": "Localize Free Text Question buttons",
     "name": "i10n",
     "type": "group",
+    "label": "Localize Free Text Question buttons",
     "common": true,
     "collapsed": true,
     "importance": "low",
     "fields": [
       {
-        "label": "Required text label",
         "name": "requiredText",
         "type": "text",
-        "description": "Text shown to notify learner that input is required before proceeding",
+        "label": "Required text label",
+        "description": "Text shown to notify learner that input is required before proceeding.",
         "default": "required",
         "importance": "low"
       },
       {
-        "label": "Required message",
         "name": "requiredMessage",
         "type": "text",
-        "importance": "low",
+        "label": "Required message",
+        "description": "Will be displayed if no text was given but it's required to have text.",
         "default": "This question requires an answer",
-        "description": "Will display if this field is unanswered and required by a wrapper content type"
+        "importance": "low"
       },
       {
-        "label": "Answered message",
+        "name": "textTooLongMessage",
+        "type": "text",
+        "label": "Too long message",
+        "description": "Will be displayed if the answer is too long.",
+        "default": "Your answer is too long",
+        "importance": "low"
+      },
+      {
         "name": "answeredMessage",
         "type": "text",
-        "importance": "low",
+        "label": "Answered message",
+        "description": "Will display when the field is answered.",
         "default": "This question has been answered",
-        "description": "Will display when the field is answered"
+        "importance": "low"
       },
       {
-        "label": "Done button label",
         "name": "doneButtonLabel",
         "type": "text",
+        "label": "Done button label",
         "default": "Done",
         "importance": "low"
       },
@@ -71,32 +79,32 @@
         "name": "remainingCharsInfoLabel",
         "type": "text",
         "label": "Remaining characters",
+        "description": "Message for remaining characters. You can use @chars which will be replaced by the corresponding number.",
         "importance": "low",
-        "default": "Remaining characters: @chars",
-        "description": "Message for remaining characters. You can use @chars which will be replaced by the corresponding number."
+        "default": "Remaining characters: @chars"
       },
       {
         "name": "exceededCharsInfoLabel",
         "type": "text",
         "label": "Characters over limit",
-        "importance": "low",
+        "description": "Message for over limit characters. You can use @chars which will be replaced by the corresponding number.",
         "default": "@chars character(s) over limit",
-        "description": "Message for over limit characters. You can use @chars which will be replaced by the corresponding number."
+        "importance": "low"
       },
       {
         "name": "ariaTextExceedCharcterLimit",
         "type": "text",
         "label": "A11y label for exceed characters limit",
-        "importance": "low",
+        "description": "Message to screen reader for remaining characters. You can use @chars which will be replaced by the corresponding number.",
         "default": "You have exceeded the character limit for this field. Please remove or shorten your input by @chars characters.",
-        "description": "Message to screen reader for remaining characters. You can use @chars which will be replaced by the corresponding number."
+        "importance": "low"
       },
       {
         "name": "language",
         "type": "select",
         "label": "Wysiwyg editor language",
-        "importance": "medium",
         "description": "The language of the wysiwyg user interface",
+        "importance": "medium",
         "options": [
           {
             "value": "af",

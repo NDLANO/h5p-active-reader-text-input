@@ -1,0 +1,25 @@
+@import "@styles/colors";
+
+.h5p-reader-question-status-bar {
+  display: flex;
+
+  &.alignment-right {
+    justify-content: flex-end;
+  }
+
+  &.display-none {
+    display: none;
+  }
+
+  .h5p-reader-question-status-bar-message {
+    font-size: 0.9rem;
+
+    &.style-correct {
+      color: $color-correct;
+    }
+
+    &.style-incorrect {
+      color: $color-incorrect;
+    }
+  }
+}

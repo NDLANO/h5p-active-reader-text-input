@@ -2,6 +2,7 @@
   &:last-child {
     margin: 0;
   }
+
   &.mt {
     margin-top: 0.5em;
   }
@@ -10,5 +11,16 @@
     content: "\f138";
     font-family: "H5PFontAwesome4", sans-serif;
     margin-left: 0.5em;
+  }
+
+  &.display-none {
+    display: none;
+  }
+
+  &[disabled="disabled"] {
+    background-color: #767676;
+    box-shadow: none;
+    color: #fff;
+    cursor: initial;
   }
 }

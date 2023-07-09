@@ -1,30 +1,32 @@
-let timer;
+import Util from '@services/util';
+import './status-bar.scss';
+
 export default class StatusBar {
   /**
    * @class
-   * @param {object} params Parameter from editor.
+   * @param {object} [params] Parameters.
    */
   constructor(params) {
-    // Set missing params
-    this.params = params;
+    this.params = Util.extend({
+      classes: []
+    }, params);
 
     // Statusbar
     this.dom = document.createElement('div');
-    this.dom.classList.add('h5p-reader-question-text-limit');
-    this.charactersLimitText = document.createElement('span');
-    this.charactersLimitText.setAttribute('aria-hidden', true);
-    this.dom.appendChild(this.charactersLimitText);
+    this.dom.classList.add('h5p-reader-question-status-bar');
 
-    // Add new field for screen reader users to inform about exceed characters
-    this.ariaInfoText = document.createElement('span');
-    this.ariaInfoText.setAttribute('role', 'alert');
-    this.ariaInfoText.innerHTML = this.params.i10n.ariaTextExceedCharcterLimit;
-    this.ariaInfoText.classList.add('hidden-aria');
-    this.dom.appendChild(this.ariaInfoText);
+    this.params.classes.forEach((className) => {
+      if (typeof className !== 'string') {
+        return;
+      }
+      this.dom.classList.add(className);
+    });
 
-    this.setUpdatedCharsCount(
-      this.params.charactersLimit - this.params.initialChars
-    );
+    this.message = document.createElement('span');
+    this.message.classList.add('h5p-reader-question-status-bar-message');
+
+    // TODO: Add aria live region
+    this.dom.appendChild(this.message);
   }
 
   /**
@@ -35,41 +37,42 @@ export default class StatusBar {
     return this.dom;
   }
 
-  /**
-   * Set remaning no of characters left in the text.
-   * @param {number} remainingChars for this class.
-   */
-  setUpdatedCharsCount(remainingChars) {
-    const TYPING_TIMER_LENGTH = 1000;
-    this.dom.classList.toggle('error-exceeded-chars', remainingChars < 0);
-    let charsInfoLabel = this.params.i10n.remainingCharsInfoLabel;
-    let charCount = remainingChars;
-    if (remainingChars < 0) {
-      charsInfoLabel = this.params.i10n.exceededCharsInfoLabel;
-      charCount *= -1;
+  show() {
+    this.dom.classList.remove('display-none');
+  }
 
-      // Implement debounce wait till user to complete the writing
-      clearTimeout(timer);
-      timer = setTimeout(() => {
-        this.ariaInfoText.innerHTML =
-        this.params.i10n.ariaTextExceedCharcterLimit.replace(
-          /@chars/g,
-          charCount
-        );
-      }, TYPING_TIMER_LENGTH);
+  hide() {
+    this.dom.classList.add('display-none');
+  }
+
+  setMessage(text, options = {}) {
+    this.message.innerText = text;
+
+    for (const name in StatusBar.STYLES) {
+      this.message.classList.remove(StatusBar.STYLES[name]);
     }
 
-    // Update remaning characters for the field
-    this.charactersLimitText.innerHTML = charsInfoLabel.replace(
-      /@chars/g,
-      charCount
-    );
+    options.styles?.forEach((name) => {
+      if (Object.keys(StatusBar.STYLES).includes(name)) {
+        this.message.classList.add(StatusBar.STYLES[name]);
+      }
+    });
   }
 
   /**
    * Reset.
    */
   reset() {
-    this.setUpdatedCharsCount(this.params.charactersLimit);
+    this.setMessage('');
+    this.hide();
   }
 }
+
+/** @constant {string} ALIGNMENT_RIGHT CSS class name for alignment right. */
+StatusBar.ALIGNMENT_RIGHT = 'alignment-right';
+
+/** @constant {object} STYLES Style name/CSS class name pair */
+StatusBar.STYLES = {
+  correct: 'style-correct',
+  incorrect: 'style-incorrect'
+};

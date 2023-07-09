@@ -5,53 +5,58 @@
     },
     {
       "label": "Placeholder text",
-      "default": "Enter your response here",
-      "description": "Text that initially will be shown in the input field. Will be removed automatically when the user starts writing."
+      "description": "Text that initially will be shown in the input field. Will be removed automatically when the user starts writing.",
+      "default": "Enter your response here"
     },
     {
       "label": "Required",
-      "description": "Learners must provide an answer in order to proceed"
+      "description": "Learners must provide an answer in order to proceed."
     },
     {
-      "label": "Characters Limit",
-      "description": "Number of characters allowed in the field"
+      "label": "Characters limit",
+      "description": "Number of characters allowed in the field. Please leave this field with default value if you don't want to limit the number of characters."
     },
     {
-      "label": "Localize Activer Reader Text Input buttons",
+      "label": "Localize Free Text Question buttons",
       "fields": [
         {
           "label": "Required text label",
-          "description": "Text shown to notify learner that input is required before proceeding",
+          "description": "Text shown to notify learner that input is required before proceeding.",
           "default": "required"
         },
         {
           "label": "Required message",
-          "default": "This question requires an answer",
-          "description": "Will display if this field is unanswered and required by a wrapper content type"
+          "description": "Will be displayed if no text was given but it's required to have text.",
+          "default": "This question requires an answer"
+        },
+        {
+          "label": "Too long message",
+          "description": "Will be displayed if the answer is too long.",
+          "default": "Your answer is too long"
         },
         {
           "label": "Answered message",
-          "default": "This question has been answered",
-          "description": "Will display when the field is answered"
+          "description": "Will display when the field is answered.",
+          "default": "This question has been answered"
         },
         {
           "label": "Done button label",
-          "default": "DoneSubmit"
+          "default": "Done"
         },
         {
           "label": "Remaining characters",
-          "default": "Remaining characters: @chars",
-          "description": "Message for remaining characters. You can use @chars which will be replaced by the corresponding number."
+          "description": "Message for remaining characters. You can use @chars which will be replaced by the corresponding number.",
+          "default": "Remaining characters: @chars"
         },
         {
           "label": "Characters over limit",
-          "default": "@chars character(s) over limit",
-          "description": "Message for over limit characters. You can use @chars which will be replaced by the corresponding number."
+          "description": "Message for over limit characters. You can use @chars which will be replaced by the corresponding number.",
+          "default": "@chars character(s) over limit"
         },
         {
           "label": "A11y label for exceed characters limit",
-          "default": "You have exceeded the character limit for this field. Please remove or shorten your input by @chars characters.",
-          "description": "Message to screen reader for remaining characters. You can use @chars which will be replaced by the corresponding number."
+          "description": "Message to screen reader for remaining characters. You can use @chars which will be replaced by the corresponding number.",
+          "default": "You have exceeded the character limit for this field. Please remove or shorten your input by @chars characters."
         },
         {
           "label": "Wysiwyg editor language",
