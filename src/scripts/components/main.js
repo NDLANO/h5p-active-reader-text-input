@@ -177,9 +177,8 @@ export default class Main {
    * Handle clicked on done button.
    */
   handleDone() {
-    const contentLength = this.getPlaintextContent().length;
-
     if (this.isFieldValid()) {
+      this.getEditorContainer().classList.remove('validation-error');
       this.callbacks.onXAPI('answered');
 
       this.statusBarDone.setMessage(
@@ -188,17 +187,22 @@ export default class Main {
       );
       this.button.hide();
     }
-    else if (this.globalParams.isRequired && contentLength === 0) {
-      this.statusBarDone.setMessage(
-        this.globalParams.i10n.requiredMessage,
-        { styles: ['incorrect'] }
-      );
-    }
     else {
-      this.statusBarDone.setMessage(
-        this.globalParams.i10n.requiredMessage,
-        { styles: ['incorrect'] }
-      );
+      this.getEditorContainer().classList.add('validation-error');
+      const contentLength = this.getPlaintextContent().length;
+
+      if (this.globalParams.isRequired && contentLength === 0) {
+        this.statusBarDone.setMessage(
+          this.globalParams.i10n.requiredMessage,
+          { styles: ['incorrect'] }
+        );
+      }
+      else {
+        this.statusBarDone.setMessage(
+          this.globalParams.i10n.requiredMessage,
+          { styles: ['incorrect'] }
+        );
+      }
     }
 
     this.statusBarDone.show();
@@ -255,9 +259,11 @@ export default class Main {
 
     if (isCharLimitExceeded) {
       charsInfoLabel = this.globalParams.i10n.exceededCharsInfoLabel;
+      this.getEditorContainer().classList.add('validation-error');
     }
     else {
       charsInfoLabel = this.globalParams.i10n.remainingCharsInfoLabel;
+      this.getEditorContainer().classList.remove('validation-error');
     }
 
     const remainingChars = this.charactersLimit -
@@ -296,5 +302,16 @@ export default class Main {
     return this.charactersLimit > 0
       ? !this.isCharLimitExceeded(contentLength)
       : true;
+  }
+
+  /**
+   * Get ckeditor container.
+   * @returns {HTMLElement} editor container.
+   */
+  getEditorContainer() {
+    return (
+      window.CKEDITOR?.instances[this.params.textAreaID]?.container.$ ||
+      this.textarea
+    );
   }
 }
