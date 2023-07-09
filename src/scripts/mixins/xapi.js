@@ -50,13 +50,19 @@ export default class XAPI {
   getXAPIDefinition(question) {
     let definition = {};
 
-    // TODO: Add language tag
+    definition.name = {};
+    definition.name[this.languageTag] = this.getTitle();
+    // Fallback for h5p-php-reporting, expects en-US
+    definition.name['en-US'] = definition.name[this.languageTag];
 
-    definition.interactionType = 'fill-in';
+    definition.description = {};
+    definition.description[this.languageTag] =  question;
+    // Fallback for h5p-php-reporting, expects en-US
+    definition.description['en-US'] = definition.description[this.languageTag];
+
     definition.type = 'http://adlnet.gov/expapi/activities/cmi.interaction';
-    definition.description = {
-      'en-US': question // We don't know the language at runtime
-    };
+    definition.interactionType = 'fill-in';
+
     definition.extensions = {
       'https://h5p.org/x-api/h5p-machine-name': 'H5P.XAPI'
     };

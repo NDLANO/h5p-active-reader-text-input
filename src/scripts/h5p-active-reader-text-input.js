@@ -1,6 +1,8 @@
 import Util from '@services/util';
 import Globals from '@services/globals';
 import Main from '@components/main';
+import XAPI from '@mixins/xapi';
+import QuestionTypeContract from '@mixins/question-type-contract';
 import { decode } from 'he';
 
 const CKEditor = H5P.CKEditor;
@@ -17,7 +19,7 @@ export default class ActiveReaderTextInput extends H5P.EventDispatcher {
     super();
 
     Util.addMixins(
-      KeywordSelector, [XAPI, QuestionTypeContract]
+      ActiveReaderTextInput, [XAPI, QuestionTypeContract]
     );
 
     const textAreaID = 'h5p-text-area-' + counter;
@@ -57,6 +59,9 @@ export default class ActiveReaderTextInput extends H5P.EventDispatcher {
         content: ''
       }
     }, extras);
+
+    const defaultLanguage = extras?.metadata?.defaultLanguage || 'en';
+    this.languageTag = Util.formatLanguageCode(defaultLanguage);
 
     // Set globals
     this.globals = new Globals();
