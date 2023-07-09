@@ -22,6 +22,7 @@ export default class Main {
       onProgressed: () => {}
     }, callbacks);
 
+    // TODO: constant
     this.currentState = 'inProgress';
 
     this.globalParams = this.params.globals.get('params');
@@ -149,13 +150,17 @@ export default class Main {
           const isValid = this.validation.isFieldValid(
             this.getPlaintextContent().length
           );
+
           if (isValid) {
             this.currentState = 'answered';
             this.callbacks.onProgressed('answered');
             this.validation?.showSuccess();
             this.button.hide();
           }
-          this.params.globals.get('resize')();
+
+          window.requestAnimationFrame(() => {
+            this.params.globals.get('resize')();
+          });
         }
       }
     );
