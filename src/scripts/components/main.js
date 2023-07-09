@@ -138,7 +138,7 @@ export default class Main {
     this.button = new Button(
       {
         i10n: {
-          submitButtonLabel: this.globalParams.i10n.submitButtonLabel
+          doneButtonLabel: this.globalParams.i10n.doneButtonLabel
         },
         charactersLimit: this.charactersLimit
       },

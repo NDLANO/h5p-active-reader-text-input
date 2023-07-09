@@ -35,8 +35,8 @@
           "description": "Will display when the field is answered"
         },
         {
-          "label": "Proceed button label",
-          "default": "Submit"
+          "label": "Done button label",
+          "default": "DoneSubmit"
         },
         {
           "label": "Remaining characters",

@@ -43,7 +43,7 @@ export default class ActiveReaderTextInput extends H5P.EventDispatcher {
         requiredText: 'required',
         requiredMessage: 'This question requires an answer',
         answeredMessage: 'This question has been answered',
-        submitButtonLabel: 'Submit',
+        doneButtonLabel: 'Done',
         remainingCharsInfoLabel: 'Remaining characters: @chars',
         exceededCharsInfoLabel: '@chars character(s) over limit',
         ariaTextExceedCharcterLimit: 'You have exceeded the character limit for this field. Please remove or shorten your input by @chars characters.',

@@ -19,7 +19,7 @@ export default class Button {
 
     // Button
     const joubelButton = H5P.JoubelUI.createButton({
-      html: this.params.i10n.submitButtonLabel,
+      html: this.params.i10n.doneButtonLabel,
       'class': 'h5p-reader-question-button-submit'
     });
     this.dom = joubelButton[0];

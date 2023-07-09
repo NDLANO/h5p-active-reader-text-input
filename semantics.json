@@ -61,10 +61,10 @@
         "description": "Will display when the field is answered"
       },
       {
-        "label": "Proceed button label",
-        "name": "submitButtonLabel",
+        "label": "Done button label",
+        "name": "doneButtonLabel",
         "type": "text",
-        "default": "Submit",
+        "default": "Done",
         "importance": "low"
       },
       {
