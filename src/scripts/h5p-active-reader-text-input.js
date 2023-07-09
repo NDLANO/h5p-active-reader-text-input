@@ -54,14 +54,11 @@ export default class ActiveReaderTextInput extends H5P.EventDispatcher {
       }
     }, extras);
 
-    // TODO: Make class
-
     // Set globals
-    Globals.set('mainInstance', this);
-    Globals.set('params', this.params);
-    Globals.set('contentId', contentId);
-    Globals.set('extras', this.extras);
-    Globals.set('resize', () => {
+    this.globals = new Globals();
+    this.globals.set('params', this.params);
+    this.globals.set('extras', this.extras);
+    this.globals.set('resize', () => {
       this.trigger('resize');
     });
 
@@ -77,6 +74,7 @@ export default class ActiveReaderTextInput extends H5P.EventDispatcher {
     // Initialize main component
     this.main = new Main(
       {
+        globals: this.globals,
         ckEditor: ckeditor,
         textAreaID: textAreaID,
         isEditing: isEditing
@@ -90,7 +88,7 @@ export default class ActiveReaderTextInput extends H5P.EventDispatcher {
     this.dom.appendChild(this.main.getDOM());
 
     ckeditor.on('created', () => {
-      Globals.get('resize')();
+      this.trigger('resize');
     });
   }
 

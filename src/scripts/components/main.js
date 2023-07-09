@@ -2,7 +2,6 @@ import Util from '@services/util';
 import Button from '@components/elements/button';
 import StatusBar from '@components/elements/status-bar';
 import Validation from '@components/elements/validation';
-import Globals from '@services/globals';
 import './main.scss';
 
 /**
@@ -25,8 +24,8 @@ export default class Main {
 
     this.currentState = 'inProgress';
 
-    this.globalParams = Globals.get('params');
-    this.globalExtras = Globals.get('extras');
+    this.globalParams = this.params.globals.get('params');
+    this.globalExtras = this.params.globals.get('extras');
     this.dom = document.createElement('div');
     this.dom.classList.add('h5p-reader-question-text-wrapper');
 
@@ -94,7 +93,7 @@ export default class Main {
     this.initSubmitButton();
 
     // Resize content type
-    Globals.get('resize')();
+    this.params.globals.get('resize')();
   }
 
   /**
@@ -156,7 +155,7 @@ export default class Main {
             this.validation?.showSuccess();
             this.button.hide();
           }
-          Globals.get('resize')();
+          this.params.globals.get('resize')();
         }
       }
     );

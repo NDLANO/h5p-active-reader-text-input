@@ -1,5 +1,4 @@
 import './button.scss';
-import Globals from '@services/globals';
 
 export default class Button {
   /**
