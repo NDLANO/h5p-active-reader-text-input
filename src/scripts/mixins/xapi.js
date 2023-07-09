@@ -61,7 +61,7 @@ export default class XAPI {
     definition.description['en-US'] = definition.description[this.languageTag];
 
     definition.type = 'http://adlnet.gov/expapi/activities/cmi.interaction';
-    definition.interactionType = 'fill-in';
+    definition.interactionType = 'fill-in'; // TODO: Long-fill-in
 
     definition.extensions = {
       'https://h5p.org/x-api/h5p-machine-name': 'H5P.XAPI'

@@ -303,15 +303,4 @@ export default class Main {
       ? !this.isCharLimitExceeded(contentLength)
       : true;
   }
-
-  /**
-   * Get ckeditor container.
-   * @returns {HTMLElement} editor container.
-   */
-  getEditorContainer() {
-    return (
-      window.CKEDITOR?.instances[this.params.textAreaID]?.container.$ ||
-      this.textarea
-    );
-  }
 }
