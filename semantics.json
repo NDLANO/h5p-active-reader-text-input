@@ -57,7 +57,7 @@
         "name": "answeredMessage",
         "type": "text",
         "importance": "low",
-        "default": "This question has been asnwered",
+        "default": "This question has been answered",
         "description": "Will display when the field is answered"
       },
       {
