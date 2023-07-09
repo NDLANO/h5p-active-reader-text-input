@@ -1,7 +1,6 @@
 import Util from '@services/util';
 import Globals from '@services/globals';
 import Main from '@components/main';
-import '@styles/h5p-active-reader-text-input.scss';
 import { decode } from 'he';
 
 const CKEditor = H5P.CKEditor;
@@ -80,8 +79,8 @@ export default class ActiveReaderTextInput extends H5P.EventDispatcher {
         isEditing: isEditing
       },
       {
-        onProgressed: (verb) => {
-          this.handleProgressed(verb);
+        onXAPI: (verb) => {
+          this.triggerXAPIEvent(verb);
         }
       }
     );
@@ -129,15 +128,6 @@ export default class ActiveReaderTextInput extends H5P.EventDispatcher {
    */
   getDescription() {
     return ActiveReaderTextInput.DEFAULT_DESCRIPTION;
-  }
-
-  /**
-   * Handle progressed.
-   * @param {string} verb Verb id.
-   */
-  handleProgressed(verb) {
-    // TODO: Check it verb is necessary
-    this.triggerXAPIEvent(verb);
   }
 
   /**

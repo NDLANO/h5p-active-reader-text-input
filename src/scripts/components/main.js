@@ -12,14 +12,14 @@ export default class Main {
    * @class
    * @param {object} [params] Parameters.
    * @param {object} [callbacks] Callbacks.
-   * @param {object} [callbacks.onProgressed] Callback when user progressed.
+   * @param {object} [callbacks.onXAPI] Callback when user progressed.
    */
   constructor(params = {}, callbacks = {}) {
     this.params = Util.extend({
     }, params);
 
     this.callbacks = Util.extend({
-      onProgressed: () => {}
+      onXAPI: () => {}
     }, callbacks);
 
     // TODO: constant
@@ -62,7 +62,7 @@ export default class Main {
     // (will break the ckeditor provided by the H5P editor)
     if (!this.params.isEditing) {
       this.textarea.addEventListener('click', () => {
-        this.callbacks.onProgressed('interacted');
+        this.callbacks.onXAPI('interacted');
         this.params.ckEditor.create();
       });
       this.params.ckEditor.on('created', () => {
@@ -153,7 +153,7 @@ export default class Main {
 
           if (isValid) {
             this.currentState = 'answered';
-            this.callbacks.onProgressed('answered');
+            this.callbacks.onXAPI('answered');
             this.validation?.showSuccess();
             this.button.hide();
           }
