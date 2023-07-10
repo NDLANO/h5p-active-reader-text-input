@@ -69,8 +69,11 @@ export default class TextInput {
     const ckeditor = new H5P.CKEditor(
       this.params.id,
       this.params.language,
-      undefined,
-      this.params.text ?? ''
+      H5P.jQuery(this.dom),
+      this.params.text ?? '',
+      Util.extend(TextInput.DEFAULT_CKE_CONFIG, {
+        title: this.params.a11y.textInputTitle
+      })
     );
 
     ckeditor.on('created', () => {
@@ -153,3 +156,29 @@ export default class TextInput {
       : true;
   }
 }
+
+/** @constant {object} DEFAULT_CKE_CONFIG Copy from unexposed in H5P.CKEditor. */
+TextInput.DEFAULT_CKE_CONFIG = {
+  customConfig: '',
+  toolbarGroups: [
+    { name: 'document', groups: [ 'mode', 'document', 'doctools' ] },
+    { name: 'styles', groups: [ 'styles' ] },
+    { name: 'basicstyles', groups: [ 'basicstyles', 'cleanup' ] },
+    { name: 'editing', groups: [ 'find', 'selection', 'editing' ] },
+    { name: 'forms', groups: [ 'forms' ] },
+    { name: 'paragraph', groups: [ 'list', 'indent', 'blocks', 'align', 'bidi', 'paragraph' ] },
+    { name: 'colors', groups: [ 'colors' ] },
+    { name: 'links', groups: [ 'links' ] },
+    { name: 'insert', groups: [ 'insert' ] },
+    { name: 'tools', groups: [ 'tools' ] },
+    { name: 'others', groups: [ 'others' ] },
+    { name: 'about', groups: [ 'about' ] }
+  ],
+  startupFocus: true,
+  width: '100%',
+  resize_enabled: false,
+  linkShowAdvancedTab: false,
+  linkShowTargetTab: false,
+  forcePasteAsPlainText: true,
+  removeButtons: 'Blockquote,Source,HorizontalRule,RemoveFormat,SpecialChar,Maximize,Image,Cut,Copy,Paste,Undo,Redo,Anchor,Subscript,Superscript,Font,BulletedList,NumberedList,Outdent,Indent,About'
+};

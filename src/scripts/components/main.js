@@ -65,7 +65,10 @@ export default class Main {
         charactersLimit: this.params.charactersLimit,
         isRequired: this.params.isRequired,
         placeholder: this.params.placeholder,
-        text: this.params.previousState.content
+        text: this.params.previousState.content,
+        a11y: {
+          textInputTitle: this.params.a11y.textInputTitle
+        }
       },
       {
         onChanged: () => {
@@ -243,13 +246,22 @@ export default class Main {
 
     const remainingChars = this.params.charactersLimit -
       this.textInput.getText().length;
+
+    const message = charsInfoLabel.replace(/@chars/g, Math.abs(remainingChars));
+
     this.statusBarChars?.setMessage(
-      charsInfoLabel.replace(/@chars/g, Math.abs(remainingChars)),
+      message,
       {
         ...( isCharLimitExceeded && { styles: ['incorrect'] }),
         ...( !isCharLimitExceeded && { styles: ['correct'] })
       }
     );
+
+    /*
+     * CKEditor in TextInput uses an iframe, and Screenreaders will need to
+     * use an ARIA-Live region within that iframe to read.
+     */
+    // this.textInput.read(message);
 
     this.statusBarDone.hide();
   }

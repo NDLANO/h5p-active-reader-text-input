@@ -37,17 +37,15 @@ export default class ActiveReaderTextInput extends H5P.EventDispatcher {
         answeredMessage: 'This question has been answered',
         doneButtonLabel: 'Done',
         remainingCharsInfoLabel: 'Remaining characters: @chars',
-        exceededCharsInfoLabel: '@chars character(s) over limit',
-        ariaTextExceedCharcterLimit: 'You have exceeded the character limit for this field. Please remove or shorten your input by @chars characters.',
+        exceededCharsInfoLabel: '@chars character(s) over limit'
       },
-      a11y: {}
+      a11y: {
+        textExceedCharcterLimit: 'You have exceeded the character limit for this field. Please remove or shorten your input by @chars characters.',
+        textInputTitle: 'Text input field',
+      }
     }, params);
 
-    this.extras = Util.extend({
-      previousState: {
-        content: ''
-      }
-    }, extras);
+    this.extras = Util.extend({ previousState: { content: '' } }, extras);
 
     const defaultLanguage = extras?.metadata?.defaultLanguage || 'en';
     this.languageTag = Util.formatLanguageCode(defaultLanguage);
@@ -62,6 +60,7 @@ export default class ActiveReaderTextInput extends H5P.EventDispatcher {
         charactersLimit: parseInt(this.params.charactersLimit) || 0,
         placeholder: Util.stripHTML(decode(this.params.placeholder)),
         l10n: this.params.l10n,
+        a11y: this.params.a11y,
         previousState: this.extras.previousState
       },
       {

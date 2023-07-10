@@ -17,7 +17,7 @@
       "description": "Number of characters allowed in the field. Please leave this field with default value if you don't want to limit the number of characters."
     },
     {
-      "label": "Localize Free Text Question buttons",
+      "label": "User interface",
       "fields": [
         {
           "label": "Required text label",
@@ -52,11 +52,6 @@
           "label": "Characters over limit",
           "description": "Message for over limit characters. You can use @chars which will be replaced by the corresponding number.",
           "default": "@chars character(s) over limit"
-        },
-        {
-          "label": "A11y label for exceed characters limit",
-          "description": "Message to screen reader for remaining characters. You can use @chars which will be replaced by the corresponding number.",
-          "default": "You have exceeded the character limit for this field. Please remove or shorten your input by @chars characters."
         },
         {
           "label": "Wysiwyg editor language",
@@ -270,6 +265,20 @@
               "label": "Chinese (PRC)"
             }
           ]
+        }
+      ]
+    },
+    {
+      "label": "Accessibility texts",
+      "fields": [
+        {
+          "label": "A11y label for exceed characters limit",
+          "description": "Message to screen reader for remaining characters. You can use @chars which will be replaced by the corresponding number.",
+          "default": "You have exceeded the character limit for this field. Please remove or shorten your input by @chars characters."
+        },
+        {
+          "label": "Editor title",
+          "default": "Text input field"
         }
       ]
     }

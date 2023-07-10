@@ -31,7 +31,7 @@
   {
     "name": "l10n",
     "type": "group",
-    "label": "Localize Free Text Question buttons",
+    "label": "User interface",
     "common": true,
     "collapsed": true,
     "importance": "low",
@@ -89,14 +89,6 @@
         "label": "Characters over limit",
         "description": "Message for over limit characters. You can use @chars which will be replaced by the corresponding number.",
         "default": "@chars character(s) over limit",
-        "importance": "low"
-      },
-      {
-        "name": "ariaTextExceedCharcterLimit",
-        "type": "text",
-        "label": "A11y label for exceed characters limit",
-        "description": "Message to screen reader for remaining characters. You can use @chars which will be replaced by the corresponding number.",
-        "default": "You have exceeded the character limit for this field. Please remove or shorten your input by @chars characters.",
         "importance": "low"
       },
       {
@@ -384,6 +376,27 @@
           }
         ],
         "default": "en"
+      }
+    ]
+  },
+  {
+    "name": "a11y",
+    "type": "group",
+    "label": "Accessibility texts",
+    "common": true,
+    "fields": [
+      {
+        "name": "textExceedCharcterLimit",
+        "type": "text",
+        "label": "A11y label for exceed characters limit",
+        "description": "Message to screen reader for remaining characters. You can use @chars which will be replaced by the corresponding number.",
+        "default": "You have exceeded the character limit for this field. Please remove or shorten your input by @chars characters."
+      },
+      {
+        "name": "textInputTitle",
+        "type": "text",
+        "label": "Editor title",
+        "default": "Text input field"
       }
     ]
   }
