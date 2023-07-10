@@ -25,11 +25,11 @@
     "type": "number",
     "label": "Characters limit",
     "description": "Number of characters allowed in the field. Please leave this field with default value if you don't want to limit the number of characters.",
-    "default": 0,
-    "importance": "low"
+    "importance": "low",
+    "optional": true
   },
   {
-    "name": "i10n",
+    "name": "l10n",
     "type": "group",
     "label": "Localize Free Text Question buttons",
     "common": true,

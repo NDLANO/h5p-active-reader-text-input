@@ -77,11 +77,9 @@ export default class TextInput {
       this.callbacks.onResized();
 
       // Catch editor change event
-      if (this.params.charactersLimit > 0) {
-        Util.getCKEditorInstance(this.params.id)?.on('change', () => {
-          this.callbacks.onChanged();
-        });
-      }
+      Util.getCKEditorInstance(this.params.id)?.on('change', () => {
+        this.callbacks.onChanged();
+      });
     });
 
     return ckeditor;
@@ -131,6 +129,10 @@ export default class TextInput {
    * @returns {boolean} True, if exceeded. Else false.
    */
   isCharLimitExceeded() {
+    if (this.params.charactersLimit === 0) {
+      return false;
+    }
+
     const contentLength = this.getText().length;
     return this.params.charactersLimit - contentLength < 0;
   }

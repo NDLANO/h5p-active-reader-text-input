@@ -16,35 +16,32 @@ export default class Main {
    */
   constructor(params = {}, callbacks = {}) {
     this.params = Util.extend({
+      previousState: {}
     }, params);
 
     this.callbacks = Util.extend({
-      onXAPI: () => {}
+      onXAPI: () => {},
+      onResized: () => {}
     }, callbacks);
-
-    this.globalParams = this.params.globals.get('params');
-    this.globalExtras = this.params.globals.get('extras');
 
     this.dom = document.createElement('div');
     this.dom.classList.add('h5p-reader-question-main-wrapper');
 
-    this.charactersLimit = parseInt(this.globalParams.charactersLimit);
-
     const text = document.createElement('div');
     text.classList.add('h5p-reader-question-text');
-    text.innerHTML = this.globalParams.question;
+    text.innerHTML = this.params.question;
 
-    if (this.globalParams.isRequired === true) {
+    if (this.params.isRequired === true) {
       const requiredText = document.createElement('div');
       requiredText.classList.add('h5p-reader-question-required-text');
-      requiredText.innerHTML = '*' + this.globalParams.i10n.requiredText;
+      requiredText.innerHTML = '*' + this.params.l10n.requiredText;
       this.dom.appendChild(requiredText);
     }
 
     this.dom.appendChild(text);
 
     this.initTextInput();
-    if (this.charactersLimit > 0) {
+    if (this.params.charactersLimit > 0) {
       this.initStatusBarChars();
     }
     this.initDoneMessage();
@@ -53,7 +50,7 @@ export default class Main {
     this.handleTextChanged();
 
     // Resize content type
-    this.params.globals.get('resize')();
+    this.callbacks.onResized();
   }
 
   /**
@@ -65,10 +62,10 @@ export default class Main {
         id: `h5p-reader-question-text-input-area-${H5P.createUUID()}`,
         isEditing: this.params.isEditing,
         language: this.params.language,
-        charactersLimit: this.charactersLimit,
+        charactersLimit: this.params.charactersLimit,
         isRequired: this.params.isRequired,
         placeholder: this.params.placeholder,
-        text: this.globalExtras.previousState.content
+        text: this.params.previousState.content
       },
       {
         onChanged: () => {
@@ -80,7 +77,7 @@ export default class Main {
           this.handleTextChanged();
         },
         onResized: () => {
-          this.params.globals.get('resize')();
+          this.callbacks.onResized();
         }
       }
     );
@@ -111,10 +108,10 @@ export default class Main {
   initSubmitButton() {
     this.button = new Button(
       {
-        i10n: {
-          doneButtonLabel: this.globalParams.i10n.doneButtonLabel
+        l10n: {
+          doneButtonLabel: this.params.l10n.doneButtonLabel
         },
-        charactersLimit: this.charactersLimit
+        charactersLimit: this.params.charactersLimit
       },
       {
         onClick: () => {
@@ -164,7 +161,6 @@ export default class Main {
    * Resets the complete task back to its' initial state.
    */
   reset() {
-    this.globalExtras.previousState.content = '';
     this.isAnswerGiven = false;
     this.wasInteractedWith = false;
 
@@ -188,7 +184,7 @@ export default class Main {
       this.callbacks.onXAPI('answered');
 
       this.statusBarDone.setMessage(
-        this.globalParams.i10n.answeredMessage,
+        this.params.l10n.answeredMessage,
         { styles: ['correct'] }
       );
       this.button.hide();
@@ -197,15 +193,15 @@ export default class Main {
       this.textInput.toggleError(true);
       const contentLength = this.textInput.getText().length;
 
-      if (this.globalParams.isRequired && contentLength === 0) {
+      if (this.params.isRequired && contentLength === 0) {
         this.statusBarDone.setMessage(
-          this.globalParams.i10n.requiredMessage,
+          this.params.l10n.requiredMessage,
           { styles: ['incorrect'] }
         );
       }
       else {
         this.statusBarDone.setMessage(
-          this.globalParams.i10n.requiredMessage,
+          this.params.l10n.requiredMessage,
           { styles: ['incorrect'] }
         );
       }
@@ -214,7 +210,7 @@ export default class Main {
     this.statusBarDone.show();
 
     window.requestAnimationFrame(() => {
-      this.params.globals.get('resize')();
+      this.callbacks.onResized();
     });
   }
 
@@ -237,17 +233,17 @@ export default class Main {
     const isCharLimitExceeded = this.textInput.isCharLimitExceeded();
 
     if (isCharLimitExceeded) {
-      charsInfoLabel = this.globalParams.i10n.exceededCharsInfoLabel;
+      charsInfoLabel = this.params.l10n.exceededCharsInfoLabel;
       this.textInput.toggleError(true);
     }
     else {
-      charsInfoLabel = this.globalParams.i10n.remainingCharsInfoLabel;
+      charsInfoLabel = this.params.l10n.remainingCharsInfoLabel;
       this.textInput.toggleError(false);
     }
 
-    const remainingChars = this.charactersLimit -
+    const remainingChars = this.params.charactersLimit -
       this.textInput.getText().length;
-    this.statusBarChars.setMessage(
+    this.statusBarChars?.setMessage(
       charsInfoLabel.replace(/@chars/g, Math.abs(remainingChars)),
       {
         ...( isCharLimitExceeded && { styles: ['incorrect'] }),

@@ -1,5 +1,4 @@
 import Util from '@services/util';
-import Globals from '@services/globals';
 import Main from '@components/main';
 import XAPI from '@mixins/xapi';
 import QuestionTypeContract from '@mixins/question-type-contract';
@@ -32,7 +31,7 @@ export default class ActiveReaderTextInput extends H5P.EventDispatcher {
         enableSolutionsButton: false,
         enableRetry: false
       },
-      i10n: {
+      l10n: {
         requiredText: 'required',
         requiredMessage: 'This question requires an answer',
         answeredMessage: 'This question has been answered',
@@ -44,9 +43,6 @@ export default class ActiveReaderTextInput extends H5P.EventDispatcher {
       a11y: {}
     }, params);
 
-    // Will be used as plain text, so HTML encoding needs to be removed.
-    this.params.placeholder = decode(this.params.placeholder);
-
     this.extras = Util.extend({
       previousState: {
         content: ''
@@ -56,24 +52,17 @@ export default class ActiveReaderTextInput extends H5P.EventDispatcher {
     const defaultLanguage = extras?.metadata?.defaultLanguage || 'en';
     this.languageTag = Util.formatLanguageCode(defaultLanguage);
 
-    // TODO: Remove
-
-    // Set globals
-    this.globals = new Globals();
-    this.globals.set('params', this.params);
-    this.globals.set('extras', this.extras);
-    this.globals.set('resize', () => {
-      this.trigger('resize');
-    });
-
     // Initialize main component
     this.main = new Main(
       {
-        globals: this.globals,
         isEditing: window.H5PEditor !== undefined,
         isRequired: this.params.isRequired,
-        language: defaultLanguage,
-        placeholder: this.params.placeholder
+        question: this.params.question,
+        language: this.params.l10n.language ?? defaultLanguage,
+        charactersLimit: parseInt(this.params.charactersLimit) || 0,
+        placeholder: Util.stripHTML(decode(this.params.placeholder)),
+        l10n: this.params.l10n,
+        previousState: this.extras.previousState
       },
       {
         onXAPI: (verb) => {
@@ -82,6 +71,9 @@ export default class ActiveReaderTextInput extends H5P.EventDispatcher {
           }
 
           this.triggerXAPIEvent(verb);
+        },
+        onResized: () => {
+          this.trigger('resize');
         }
       }
     );

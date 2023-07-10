@@ -5,7 +5,7 @@ export default class Button {
   /**
    * @class
    * @param {object} params Parameter from editor.
-   * @param {object} params.i10n Localization strings.
+   * @param {object} params.l10n Localization strings.
    * @param {object} [callbacks] Callbacks.
    */
   constructor(params = {}, callbacks = {}) {
@@ -20,10 +20,11 @@ export default class Button {
     this.dom.classList.add(
       'h5p-joubelui-button', 'h5p-reader-question-button-submit'
     );
-    if (parseInt(this.params.charactersLimit) === 0) {
+
+    if (this.params.charactersLimit === 0) {
       this.dom.classList.add('mt');
     }
-    this.dom.innerHTML = this.params.i10n.doneButtonLabel;
+    this.dom.innerHTML = this.params.l10n.doneButtonLabel;
     this.dom.addEventListener('click', (event) => {
       this.callbacks.onClick(event);
     });
