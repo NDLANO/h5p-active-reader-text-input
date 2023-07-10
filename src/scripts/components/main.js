@@ -34,7 +34,7 @@ export default class Main {
     if (this.params.isRequired === true) {
       const requiredText = document.createElement('div');
       requiredText.classList.add('h5p-reader-question-required-text');
-      requiredText.innerHTML = '*' + this.params.l10n.requiredText;
+      requiredText.innerHTML = `*${this.params.l10n.requiredText}`;
       this.dom.appendChild(requiredText);
     }
 
