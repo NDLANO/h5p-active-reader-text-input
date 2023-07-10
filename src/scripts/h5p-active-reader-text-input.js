@@ -4,9 +4,7 @@ import Main from '@components/main';
 import XAPI from '@mixins/xapi';
 import QuestionTypeContract from '@mixins/question-type-contract';
 import { decode } from 'he';
-
-const CKEditor = H5P.CKEditor;
-let counter = 0;
+import '@styles/h5p-active-reader-text-input.scss';
 
 export default class ActiveReaderTextInput extends H5P.EventDispatcher {
   /**
@@ -21,11 +19,6 @@ export default class ActiveReaderTextInput extends H5P.EventDispatcher {
     Util.addMixins(
       ActiveReaderTextInput, [XAPI, QuestionTypeContract]
     );
-
-    const textAreaID = 'h5p-text-area-' + counter;
-    const isEditing = (window.H5PEditor !== undefined);
-
-    counter++;
 
     this.score = 0;
 
@@ -63,6 +56,8 @@ export default class ActiveReaderTextInput extends H5P.EventDispatcher {
     const defaultLanguage = extras?.metadata?.defaultLanguage || 'en';
     this.languageTag = Util.formatLanguageCode(defaultLanguage);
 
+    // TODO: Remove
+
     // Set globals
     this.globals = new Globals();
     this.globals.set('params', this.params);
@@ -71,22 +66,14 @@ export default class ActiveReaderTextInput extends H5P.EventDispatcher {
       this.trigger('resize');
     });
 
-    this.dom = this.buildDOM();
-
-    const ckeditor = new CKEditor(
-      textAreaID,
-      params.i10n.language,
-      this.extras.parent.$container,
-      this.extras.previousState.content
-    );
-
     // Initialize main component
     this.main = new Main(
       {
         globals: this.globals,
-        ckEditor: ckeditor,
-        textAreaID: textAreaID,
-        isEditing: isEditing
+        isEditing: window.H5PEditor !== undefined,
+        isRequired: this.params.isRequired,
+        language: defaultLanguage,
+        placeholder: this.params.placeholder
       },
       {
         onXAPI: (verb) => {
@@ -98,11 +85,6 @@ export default class ActiveReaderTextInput extends H5P.EventDispatcher {
         }
       }
     );
-    this.dom.appendChild(this.main.getDOM());
-
-    ckeditor.on('created', () => {
-      this.trigger('resize');
-    });
   }
 
   /**
@@ -111,18 +93,7 @@ export default class ActiveReaderTextInput extends H5P.EventDispatcher {
    */
   attach($wrapper) {
     $wrapper.get(0).classList.add('h5p-reader-question');
-    $wrapper.get(0).appendChild(this.dom);
-  }
-
-  /**
-   * Build main DOM.
-   * @returns {HTMLElement} Main DOM.
-   */
-  buildDOM() {
-    const dom = document.createElement('div');
-    dom.classList.add('h5p-reader-question-wrapper');
-
-    return dom;
+    $wrapper.get(0).appendChild(this.main.getDOM());
   }
 
   /**

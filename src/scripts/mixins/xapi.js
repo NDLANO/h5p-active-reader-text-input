@@ -36,7 +36,7 @@ export default class XAPI {
 
       // Add the response to the xAPI statement
       // Return a stored user response if it exists
-      xAPIEvent.data.statement.result.response = this.getResponse();
+      xAPIEvent.data.statement.result.response = this.main.getResponse();
     }
 
     return xAPIEvent;

@@ -1,6 +1,7 @@
 import Util from '@services/util';
 import Button from '@components/elements/button';
 import StatusBar from '@components/elements/status-bar';
+import TextInput from '@components/elements/text-input';
 import './main.scss';
 
 /**
@@ -23,8 +24,9 @@ export default class Main {
 
     this.globalParams = this.params.globals.get('params');
     this.globalExtras = this.params.globals.get('extras');
+
     this.dom = document.createElement('div');
-    this.dom.classList.add('h5p-reader-question-text-wrapper');
+    this.dom.classList.add('h5p-reader-question-main-wrapper');
 
     this.charactersLimit = parseInt(this.globalParams.charactersLimit);
 
@@ -41,65 +43,48 @@ export default class Main {
 
     this.dom.appendChild(text);
 
-    // TODO: Put this in separate component
-
-    // Initialize textarea/ckeditor
-    const inputWrapper = document.createElement('div');
-    inputWrapper.classList.add('h5p-reader-question-input-wrapper');
-
-    this.textarea = document.createElement('div');
-    this.textarea.classList.add('h5p-reader-question-input');
-    this.textarea.setAttribute('tabindex', 0);
-    this.textarea.addEventListener('focus', (event) => {
-      event.target.click();
-    });
-    this.textarea.id = this.params.textAreaID;
-
-    let content;
-    // Don't load CKEditor if in editor
-    // (will break the ckeditor provided by the H5P editor)
-    if (!this.params.isEditing) {
-      this.textarea.addEventListener('click', () => {
-        this.callbacks.onXAPI('interacted');
-        this.params.ckEditor.create();
-      });
-      this.params.ckEditor.on('created', () => {
-        if (this.charactersLimit > 0) {
-          this.handleTextChanged();
-        }
-
-        // Catch editor change event
-        window.CKEDITOR.instances[this.params.textAreaID].on('change', () => {
-          if (this.charactersLimit > 0) {
-            this.handleTextChanged();
-          }
-        });
-      });
-
-      content = this.params.ckEditor.getData();
-    }
-
-    this.textarea.innerHTML = content ? content : '';
-    this.textarea.setAttribute('placeholder', this.globalParams.placeholder);
-
-    inputWrapper.append(this.textarea);
-    this.dom.appendChild(inputWrapper);
-
-    // Initialize character limit
+    this.initTextInput();
     if (this.charactersLimit > 0) {
       this.initStatusBarChars();
     }
-
-    // Initialize validation wrapper
     this.initDoneMessage();
-
-    // Initialize button
     this.initSubmitButton();
 
     this.handleTextChanged();
 
     // Resize content type
     this.params.globals.get('resize')();
+  }
+
+  /**
+   * Initialize text input field.
+   */
+  initTextInput() {
+    this.textInput = new TextInput(
+      {
+        id: `h5p-reader-question-text-input-area-${H5P.createUUID()}`,
+        isEditing: this.params.isEditing,
+        language: this.params.language,
+        charactersLimit: this.charactersLimit,
+        isRequired: this.params.isRequired,
+        placeholder: this.params.placeholder,
+        text: this.globalExtras.previousState.content
+      },
+      {
+        onChanged: () => {
+          if (!this.wasInteractedWith) {
+            this.wasInteractedWith = true;
+            this.callbacks.onXAPI('interacted');
+          }
+
+          this.handleTextChanged();
+        },
+        onResized: () => {
+          this.params.globals.get('resize')();
+        }
+      }
+    );
+    this.dom.append(this.textInput.getDOM());
   }
 
   /**
@@ -149,13 +134,29 @@ export default class Main {
   }
 
   /**
+   * Get user response.
+   * @returns {string} HTML response of user.
+   */
+  getResponse() {
+    return this.textInput.getHTML();
+  }
+
+  /**
    * Return H5P core's call to store current state.
    * @returns {object} Current state.
    */
   getCurrentState() {
     return {
-      content: this.params.ckEditor.getData()
+      content: this.textInput.getHTML()
     };
+  }
+
+  /**
+   * Determine whether the task was answered already.
+   * @returns {boolean} True if answer was given by user, else false.
+   */
+  getAnswerGiven() {
+    return this.isAnswerGiven;
   }
 
   /**
@@ -163,13 +164,18 @@ export default class Main {
    * Resets the complete task back to its' initial state.
    */
   reset() {
-    window.CKEDITOR?.instances[this.params.textAreaID]?.updateElement();
-    window.CKEDITOR?.instances[this.params.textAreaID]?.setData('');
     this.globalExtras.previousState.content = '';
-    this.params.ckEditor.destroy();
-    this.textarea.innerHTML = '';
+    this.isAnswerGiven = false;
+    this.wasInteractedWith = false;
+
+    this.textInput.reset();
+
     this.statusBarChars?.reset();
+    this.handleTextChanged();
+    this.statusBarChars?.show();
+
     this.statusBarDone?.reset();
+
     this.button.show();
   }
 
@@ -177,8 +183,8 @@ export default class Main {
    * Handle clicked on done button.
    */
   handleDone() {
-    if (this.isFieldValid()) {
-      this.getEditorContainer().classList.remove('validation-error');
+    if (this.textInput.validate()) {
+      this.textInput.toggleError(false);
       this.callbacks.onXAPI('answered');
 
       this.statusBarDone.setMessage(
@@ -188,8 +194,8 @@ export default class Main {
       this.button.hide();
     }
     else {
-      this.getEditorContainer().classList.add('validation-error');
-      const contentLength = this.getPlaintextContent().length;
+      this.textInput.toggleError(true);
+      const contentLength = this.textInput.getText().length;
 
       if (this.globalParams.isRequired && contentLength === 0) {
         this.statusBarDone.setMessage(
@@ -213,41 +219,14 @@ export default class Main {
   }
 
   /**
-   * Get response.
-   * @returns {string} Response.
-   */
-  getResponse() {
-    return this.params.ckEditor
-      ? this.params.ckEditor.getData()
-      : this.textarea.innerText;
-  }
-
-  /**
-   * Get plaintext.
-   * @returns {string} Response.
-   */
-  getPlaintextContent() {
-    const tempEle = document.createElement('div');
-    tempEle.innerHTML = this.getResponse();
-    return Util.stripHTML(this.getResponse());
-  }
-
-  /**
-   * Get ckeditor container.
-   * @returns {HTMLElement} editor container.
-   */
-  getEditorContainer() {
-    return (
-      window.CKEDITOR?.instances[this.params.textAreaID]?.container.$ ||
-      this.textarea
-    );
-  }
-
-  /**
    * Handle text changed event.
    */
   handleTextChanged() {
-    if (this.isFieldValid()) {
+    if (this.textInput.getText().length > 0) {
+      this.isAnswerGiven = true;
+    }
+
+    if (this.textInput.validate()) {
       this.button.enable();
     }
     else {
@@ -255,19 +234,19 @@ export default class Main {
     }
 
     let charsInfoLabel;
-    const isCharLimitExceeded = this.isCharLimitExceeded();
+    const isCharLimitExceeded = this.textInput.isCharLimitExceeded();
 
     if (isCharLimitExceeded) {
       charsInfoLabel = this.globalParams.i10n.exceededCharsInfoLabel;
-      this.getEditorContainer().classList.add('validation-error');
+      this.textInput.toggleError(true);
     }
     else {
       charsInfoLabel = this.globalParams.i10n.remainingCharsInfoLabel;
-      this.getEditorContainer().classList.remove('validation-error');
+      this.textInput.toggleError(false);
     }
 
     const remainingChars = this.charactersLimit -
-      this.getPlaintextContent().length;
+      this.textInput.getText().length;
     this.statusBarChars.setMessage(
       charsInfoLabel.replace(/@chars/g, Math.abs(remainingChars)),
       {
@@ -277,30 +256,5 @@ export default class Main {
     );
 
     this.statusBarDone.hide();
-  }
-
-  /**
-   * Determine whether character limit is exceeded.
-   * @returns {boolean} True, if exceeded. Else false.
-   */
-  isCharLimitExceeded() {
-    const contentLength = this.getPlaintextContent().length;
-    return this.charactersLimit - contentLength < 0;
-  }
-
-  /**
-   * Determine whether text input is valid.
-   * @returns {boolean} True, if valid. Else false.
-   */
-  isFieldValid() {
-    const contentLength = this.getPlaintextContent().length;
-
-    if (this.globalParams.isRequired && contentLength === 0) {
-      return false;
-    }
-
-    return this.charactersLimit > 0
-      ? !this.isCharLimitExceeded(contentLength)
-      : true;
   }
 }

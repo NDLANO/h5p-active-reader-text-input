@@ -1,3 +1,5 @@
+// TODO: Split
+
 /** Class for utility functions */
 export default class Util {
   /**
@@ -62,7 +64,7 @@ export default class Util {
         }
 
         if (Object.getOwnPropertyNames(masterPrototype).includes(property)) {
-          return; // property already present, do not override
+          return; // progetReperty already present, do not override
         }
 
         masterPrototype[property] = mixinPrototype[property];
@@ -93,5 +95,14 @@ export default class Util {
     languageCode = segments.join('-');
 
     return languageCode;
+  }
+
+  /**
+   * Get CKEditor instance for id.
+   * @param {string} id Id.
+   * @returns {object} CKEditor instance.
+   */
+  static getCKEditorInstance(id) {
+    return window.CKEDITOR?.instances[id] ?? null;
   }
 }
