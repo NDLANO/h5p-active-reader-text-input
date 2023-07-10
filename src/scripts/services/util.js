@@ -1,5 +1,3 @@
-// TODO: Split
-
 /** Class for utility functions */
 export default class Util {
   /**

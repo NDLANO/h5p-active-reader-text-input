@@ -259,10 +259,10 @@ export default class Main {
 
     /*
      * CKEditor in TextInput uses an iframe, and Screenreaders will need to
-     * use an ARIA-Live region within that iframe to read.
+     * use an ARIA live region within that iframe to read. However, everything
+     * that is in the body of that iframe will belong to the text input.
+     * Will require some workaround.
      */
-    // this.textInput.read(message);
-
     this.statusBarDone.hide();
   }
 }

@@ -25,7 +25,6 @@ export default class StatusBar {
     this.message = document.createElement('span');
     this.message.classList.add('h5p-reader-question-status-bar-message');
 
-    // TODO: Add aria live region
     this.dom.appendChild(this.message);
   }
 
