@@ -56,16 +56,24 @@ export default class XAPI {
     definition.name['en-US'] = definition.name[this.languageTag];
 
     definition.description = {};
-    definition.description[this.languageTag] =  question;
+    definition.description[this.languageTag] = `${question} ${XAPI.FILL_IN_PLACEHOLDER}`;
     // Fallback for h5p-php-reporting, expects en-US
     definition.description['en-US'] = definition.description[this.languageTag];
 
-    definition.type = 'http://adlnet.gov/expapi/activities/cmi.interaction';
-    definition.interactionType = 'fill-in'; // TODO: Long-fill-in
+    definition.description[this.languageTag];
+
+    definition.type = 'http://id.tincanapi.com/activitytype/essay';
+    definition.interactionType = 'long-fill-in';
 
     definition.extensions = {
-      'https://h5p.org/x-api/h5p-machine-name': 'H5P.XAPI'
+      'https://h5p.org/x-api/h5p-machine-name': 'H5P.ActiveReaderTextInput'
     };
+
+    /*
+     * The official xAPI documentation discourages to use a correct response
+     * pattern it if the criteria for a question are complex and correct
+     * responses cannot be exhaustively listed. They can't.
+     */
 
     return definition;
   };
@@ -92,3 +100,6 @@ export default class XAPI {
 
 /** @constant {string} Default description */
 XAPI.DEFAULT_DESCRIPTION = 'Active Reader Text Input';
+
+/** @constant {string} XAPI.FILL_IN_PLACEHOLDER Required to be added to xAPI object description for H5P reporting */
+XAPI.FILL_IN_PLACEHOLDER = '__________';
