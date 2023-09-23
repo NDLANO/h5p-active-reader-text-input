@@ -88,15 +88,6 @@ export default class ActiveReaderTextInput extends H5P.EventDispatcher {
   }
 
   /**
-   * Determine whether the task was answered already.
-   * @returns {boolean} True if answer was given by user, else false.
-   * @see contract at {@link https://h5p.org/documentation/developers/contracts#guides-header-1}
-   */
-  getAnswerGiven() {
-    return this.getResponse() !== '';
-  }
-
-  /**
    * Return H5P core's call to store current state.
    * @returns {object|undefined} Current state.
    */

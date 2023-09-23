@@ -221,9 +221,7 @@ export default class Main {
    * Handle text changed event.
    */
   handleTextChanged() {
-    if (this.textInput.getText().length > 0) {
-      this.isAnswerGiven = true;
-    }
+    this.isAnswerGiven = this.textInput.getText().length > 0;
 
     if (this.textInput.validate()) {
       this.button.enable();
