@@ -1,4 +1,4 @@
-@import "@styles/colors";
+@use "@styles/colors" as colors;
 
 .h5p-reader-question-status-bar {
   display: flex;
@@ -15,11 +15,11 @@
     font-size: 0.9rem;
 
     &.style-correct {
-      color: $color-correct;
+      color: colors.$color-correct;
     }
 
     &.style-incorrect {
-      color: $color-incorrect;
+      color: colors.$color-incorrect;
     }
   }
 }

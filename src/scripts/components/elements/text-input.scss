@@ -1,11 +1,11 @@
-@import "@styles/colors";
+@use "@styles/colors" as colors;
 
 .h5p-reader-question-text-input-wrapper {
   font-size: 0.9rem;
   margin-top: 0.5rem;
   position: relative;
+  overflow-wrap: break-word;
   resize: none;
-  word-wrap: break-word;
 
   .h5p-reader-question-text-input-textarea {
     border: 1px solid #d1d1d1;
@@ -31,11 +31,11 @@
 
   &.error {
     .h5p-reader-question-text-input-textarea {
-      border: 1px solid $color-incorrect;
+      border: 1px solid colors.$color-incorrect;
     }
 
     .cke {
-      border: 1px solid $color-incorrect;
+      border: 1px solid colors.$color-incorrect;
     }
   }
 }
