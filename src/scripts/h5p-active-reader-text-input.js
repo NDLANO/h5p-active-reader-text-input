@@ -40,7 +40,8 @@ export default class ActiveReaderTextInput extends H5P.EventDispatcher {
         exceededCharsInfoLabel: '@chars character(s) over limit'
       },
       a11y: {
-        textExceedCharcterLimit: 'You have exceeded the character limit for this field. Please remove or shorten your input by @chars characters.',
+        // eslint-disable-next-line @stylistic/js/max-len
+        textExceedCharcterLimit:'You have exceeded the character limit for this field. Please remove or shorten your input by @chars characters.',
         textInputTitle: 'Text input field',
       }
     }, params);

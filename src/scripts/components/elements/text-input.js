@@ -180,5 +180,6 @@ TextInput.DEFAULT_CKE_CONFIG = {
   linkShowAdvancedTab: false,
   linkShowTargetTab: false,
   forcePasteAsPlainText: true,
+  // eslint-disable-next-line @stylistic/js/max-len
   removeButtons: 'Blockquote,Source,HorizontalRule,RemoveFormat,SpecialChar,Maximize,Image,Cut,Copy,Paste,Undo,Redo,Anchor,Subscript,Superscript,Font,BulletedList,NumberedList,Outdent,Indent,About'
 };

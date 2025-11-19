@@ -1,13 +1,19 @@
-const path = require('path');
-const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+import path from 'path';
+import { fileURLToPath } from 'url';
+import process from 'node:process';
+import MiniCssExtractPlugin from 'mini-css-extract-plugin';
 // terser-webpack-plugin is provided by webpack automatically
-const TerserPlugin = require('terser-webpack-plugin'); // eslint-disable-line
+// eslint-disable-next-line import/no-extraneous-dependencies
+import TerserPlugin from 'terser-webpack-plugin';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const mode = process.argv.includes('--mode=production') ?
   'production' : 'development';
 const libraryName = process.env.npm_package_name;
 
-module.exports = {
+export default {
   mode: mode,
   resolve: {
     alias: {
