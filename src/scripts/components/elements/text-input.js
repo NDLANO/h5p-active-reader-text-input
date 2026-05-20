@@ -30,11 +30,11 @@ export default class TextInput {
     }
 
     if (!this.params.isEditing) {
-      this.textarea.addEventListener('focus', (event) => {
+      this.textarea.addEventListener('focus', () => {
         this.initCKEditor();
       });
 
-      this.textarea.addEventListener('click', (event) => {
+      this.textarea.addEventListener('click', () => {
         this.initCKEditor();
       });
     }
