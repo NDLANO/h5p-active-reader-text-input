@@ -1,6 +1,5 @@
 {
   "name": "h5p-active-reader-text-input",
-  "version": "1.0.0",
   "description": "Active Reader Text Input",
   "private": true,
   "scripts": {
